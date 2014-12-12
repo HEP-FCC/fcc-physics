@@ -2,11 +2,10 @@
 #define ParticleHANDLE_H
 #include "datamodel/Particle.h"
 #include "datamodel/LorentzVector.h"
-#include "datamodel/ParticleHandle.h"
 
 #include <vector>
 
-// Reference to another particle
+// Status code
 // author: C. Bernet, B. Hegner
 
 //forward declaration of Particle container

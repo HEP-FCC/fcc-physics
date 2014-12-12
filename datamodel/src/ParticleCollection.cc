@@ -32,9 +32,7 @@ void ParticleCollection::clear(){
 }
 
 void ParticleCollection::prepareForWrite(const albers::Registry* registry){
-  for(auto& data : *m_data){
-     data.Mother.prepareForWrite(registry);
-  }
+
 }
 
 void ParticleCollection::prepareAfterRead(albers::Registry* registry){
@@ -43,8 +41,7 @@ void ParticleCollection::prepareAfterRead(albers::Registry* registry){
   // fix. otherwise, m_collectionID == 0..
   m_collectionID = registry->getIDFromPODAddress( _getBuffer() );
   for (auto& data : *m_data){
-    data.Mother.prepareAfterRead(registry);
-
+    
     m_handles.emplace_back(ParticleHandle(index,m_collectionID, m_data));
     ++index;
   }

@@ -49,17 +49,18 @@ include_directories(
 
 # Add sub-directories
 add_subdirectory(albers)
-add_subdirectory(examples)
+add_subdirectory(datamodel)
+# add_subdirectory(examples)
 
 # The interesting stuff goes here
 # ===============================
 
 # Add all targets to the build-tree export set
-export(TARGETS albers write 
-  FILE "${PROJECT_BINARY_DIR}/albersTargets.cmake")
+#export(TARGETS albers write 
+#  FILE "${PROJECT_BINARY_DIR}/albersTargets.cmake")
 
-export(TARGETS albers read
-  FILE "${PROJECT_BINARY_DIR}/albersTargets.cmake")
+#export(TARGETS albers read
+#  FILE "${PROJECT_BINARY_DIR}/albersTargets.cmake")
 
 # Export the package for use from the build-tree
 # (this registers the build-tree with a global CMake-registry)

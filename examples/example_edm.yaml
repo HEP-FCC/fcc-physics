@@ -35,6 +35,3 @@ datatypes :
      - name : Status
        type : int
        description : "Status code"
-     - name : Mother
-       type : ParticleHandle
-       description : "Reference to another particle" 
