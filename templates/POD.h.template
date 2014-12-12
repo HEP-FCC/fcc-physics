@@ -1,0 +1,14 @@
+#ifndef ${name}_H 
+#define ${name}_H
+
+// $description
+// author: $author
+
+$includes
+
+class $name {
+public:
+$members
+};
+
+#endif
