@@ -52,17 +52,15 @@ include_directories(
 
 # Add sub-directories
 add_subdirectory(datamodel)
-# add_subdirectory(examples)
+add_subdirectory(utilities)
+add_subdirectory(examples)
 
 # The interesting stuff goes here
 # ===============================
 
 # Add all targets to the build-tree export set
-export(TARGETS datamodel 
+export(TARGETS datamodel utilities writefcc readfcc
   FILE "${PROJECT_BINARY_DIR}/fccedmTargets.cmake")
-
-#export(TARGETS fccedm read
-#  FILE "${PROJECT_BINARY_DIR}/fccedmTargets.cmake")
 
 # Export the package for use from the build-tree
 # (this registers the build-tree with a global CMake-registry)

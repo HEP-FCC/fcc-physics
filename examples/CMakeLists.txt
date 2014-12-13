@@ -2,18 +2,18 @@ include_directories(
         ${CMAKE_SOURCE_DIR}/datamodel
 )
 
-add_executable(write write.cc)
-add_executable(read read.cc)
+add_executable(writefcc write.cc)
+add_executable(readfcc read.cc)
 
-target_link_libraries(write albers datamodel)
-target_link_libraries(read albers datamodel)
+target_link_libraries(writefcc utilities datamodel albers)
+target_link_libraries(readfcc utilities datamodel albers)
 
-install(TARGETS write
+install(TARGETS writefcc readfcc
   # IMPORTANT: Add the write executable to the "export-set"
-  EXPORT albersTargets
+  EXPORT fccedmTargets
   RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin)
 
-install(TARGETS read
-  # IMPORTANT: Add the read executable to the "export-set"
-  EXPORT albersTargets
-  RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin)
+#install(TARGETS read
+#  # IMPORTANT: Add the read executable to the "export-set"
+#  EXPORT fccedmTargets
+#  RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin)

@@ -1,5 +1,12 @@
 #include "datamodel/ParticleCollection.h"
 #include "datamodel/EventInfoCollection.h"
+#include "datamodel/JetCollection.h"
+#include "datamodel/JetParticleAssociationCollection.h"
+
+// Utility functions
+#include "utilities/JetUtils.h"
+#include "utilities/VectorUtils.h"
+#include "utilities/ParticleUtils.h"
 
 // ROOT
 #include "TBranch.h"
@@ -35,11 +42,91 @@ void processEvent(albers::EventStore& store, bool verbose,
       return;
     }
   }
+
+  // the following is commented out to test on-demand reading through Jet-Particle association,
+  // see below
+  // // read particles
+  // ParticleCollection* ptcs(nullptr);
+  // bool particles_available = store.get("GenParticle",ptcs);
+  // if (particles_available){
+  //   for(const auto& part : *ptcs) {
+  //     std::cout<<part.containerID()<<" "<<part.index()<<std::endl;
+  //   }
+  // }
+
+  // read jets
+  JetCollection* jrefs(nullptr);
+  bool jets_available = store.get("GenJet",jrefs);
+  std::vector<ParticleHandle> injets;
+
+  if (jets_available){
+    JetParticleAssociationCollection* jprefs(nullptr);
+    bool assoc_available = store.get("GenJetParticle",jprefs);
+    if(verbose) {
+      reader.getRegistry()->print();
+      std::cout << "jet collection:" << std::endl;
+    }
+    for(const auto& jet : *jrefs){
+      std::vector<ParticleHandle> jparticles = utils::associatedParticles(jet,
+									  *jprefs);
+      TLorentzVector lv = utils::lvFromPOD(jet.read().Core.P4);
+      if(verbose)
+	std::cout << "\tjet: E=" << lv.E() << " "<<lv.Eta()<<" "<<lv.Phi()
+		  <<" npart="<<jparticles.size()<<std::endl;
+      if(assoc_available) {
+	for(const auto& part : jparticles) {
+	  if(part.isAvailable()) {
+	    if(verbose)
+	      std::cout<<"\t\tassociated "<<part<<std::endl;
+	    injets.push_back(part);
+	  }
+	}
+      }
+    }
+  }
+
+  // read particles
+  ParticleCollection* ptcs(nullptr);
+  bool particles_available = store.get("GenParticle",ptcs);
+  if (particles_available){
+    std::vector<ParticleHandle> muons;
+    if(verbose)
+      std::cout << "particle collection:" << std::endl;
+    for(const auto& ptc : *ptcs){
+      if(verbose)
+	std::cout<<"\t"<<ptc<<std::endl;
+      if( ptc.read().Core.Type == 4 )
+	muons.push_back(ptc);
+    }
+    // listing particles that are not used in a jet
+    const std::vector<ParticleHandle>& particles = ptcs->getHandles();
+    std::vector<ParticleHandle> unused = utils::unused(particles, injets);
+    if(verbose)
+      std::cout<<"unused particles: "<<unused.size()<<"/"<<particles.size()<<" "<<injets.size()<<std::endl;
+
+    // computing isolation for first muon
+    if(not muons.empty()) {
+      const ParticleHandle& muon = muons[0];
+      float dRMax = 0.5;
+      const std::vector<ParticleHandle> incone = utils::inCone( muon.read().Core.P4,
+								particles,
+								dRMax);
+      float sumpt = utils::sumPt(incone);
+      if( verbose ) {
+	std::cout<<"muon: "<<muon<<" sumpt "<<sumpt<<std::endl;
+	std::cout<<"\tparticles in cone:"<<std::endl;
+      }
+      for(const auto& ptc : incone) {
+	if( verbose )
+	  std::cout<<"\t"<<ptc<<std::endl;
+      }
+    }
+  }
 }
 
 
 int main(){
-  // gSystem->Load("libDataModelExample.so");
+  gSystem->Load("libDataModelExample.so");
   albers::Reader reader;
   albers::EventStore store(nullptr);
   store.setReader(&reader);

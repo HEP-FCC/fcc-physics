@@ -3,6 +3,12 @@
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/Particle.h"
 #include "datamodel/ParticleCollection.h"
+#include "datamodel/JetCollection.h"
+#include "datamodel/JetParticleAssociationCollection.h"
+#include "datamodel/LorentzVector.h"
+
+// Utility functions
+#include "utilities/VectorUtils.h"
 
 // ROOT
 #include "TLorentzVector.h"
@@ -20,10 +26,15 @@
 #include "albers/Registry.h"
 #include "albers/Writer.h"
 
+// testing tools
+#include "utilities/DummyGenerator.h"
 
-void processEvent(unsigned iEvent, albers::EventStore& store, albers::Writer& writer) {
+
+void processEvent(unsigned iEvent, albers::EventStore& store, albers::Writer& writer, DummyGenerator& generator) {
   if(iEvent % 1000 == 0)
     std::cout<<"processing event "<<iEvent<<std::endl;
+
+  generator.generate();
 
   // fill event information
   EventInfoCollection* evinfocoll = nullptr;
@@ -46,7 +57,7 @@ void processEvent(unsigned iEvent, albers::EventStore& store, albers::Writer& wr
 
 
 int main(){
-  // gSystem->Load("libDataModelExample.so");
+  gSystem->Load("libDataModelExample.so");
 
   std::cout<<"start processing"<<std::endl;
 
@@ -54,13 +65,22 @@ int main(){
   albers::EventStore store(&registry);
   albers::Writer     writer("example.root", &registry);
 
+  DummyGenerator generator(10, store);
+  generator.setNPrint(10);
+
   unsigned nevents=10000;
 
   EventInfoCollection& evinfocoll = store.create<EventInfoCollection>("EventInfo");
+
   writer.registerForWrite<EventInfoCollection>("EventInfo");
 
+  // collections from the dummy generator
+  writer.registerForWrite<ParticleCollection>("GenParticle");
+  writer.registerForWrite<JetCollection>("GenJet");
+  writer.registerForWrite<JetParticleAssociationCollection>("GenJetParticle");
+
   for(unsigned i=0; i<nevents; ++i) {
-    processEvent(i, store, writer);
+    processEvent(i, store, writer, generator);
   }
 
   writer.finish();
