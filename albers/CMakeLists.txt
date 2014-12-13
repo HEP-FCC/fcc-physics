@@ -7,7 +7,7 @@ add_library(albers SHARED ${sources} ${headers} config.h.in)
 target_link_libraries(albers ${ROOT_LIBRARIES} ${ROOT_COMPONENT_LIBRARIES})
 
 set_target_properties(albers PROPERTIES
-  PUBLIC_HEADER "CollectionBase.h;${CMAKE_CURRENT_BINARY_DIR}/config.h")
+  PUBLIC_HEADER "${headers};${CMAKE_CURRENT_BINARY_DIR}/config.h")
 
 install(TARGETS albers
   # IMPORTANT: Add the albers library to the "export-set"

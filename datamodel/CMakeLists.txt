@@ -4,13 +4,20 @@ include_directories(
 )
 
 file(GLOB sources src/*.cc datamodel/*.h)
-# file(GLOB headers RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.h)
-set(headers datamodel/*.h)
+file(GLOB headers datamodel/*.h)
 
-# list(REMOVE_ITEM headers ${CMAKE_CURRENT_SOURCE_DIR}/datamodel/LinkDef.h  )
-message(DICTIONARY ${headers})
-ROOT_GENERATE_DICTIONARY(ExampleDict ${headers} LINKDEF LinkDef.h )
+ROOT_GENERATE_DICTIONARY(ExampleDict datamodel/*.h LINKDEF LinkDef.h )
 
 add_library(datamodel SHARED ${sources} ${}ExampleDict.cxx)
 target_link_libraries(datamodel albers ${ROOT_LIBRARIES} ${ROOT_COMPONENT_LIBRARIES})
 
+set_target_properties(datamodel PROPERTIES
+  PUBLIC_HEADER "${headers}")
+
+install(TARGETS datamodel
+  # IMPORTANT: Add the albers library to the "export-set"
+  EXPORT datamodelTargets
+  RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
+  LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
+  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/datamodel"
+    COMPONENT dev)
