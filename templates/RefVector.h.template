@@ -1,3 +1,0 @@
-  void add${relation}(${relationtype}Handle&);
-  std::vector<${relationtype}Handle>::const_iterator ${relation}_begin() const;
-  std::vector<${relationtype}Handle>::const_iterator ${relation}_end() const;

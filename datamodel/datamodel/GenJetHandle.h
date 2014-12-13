@@ -1,29 +1,29 @@
-#ifndef ParticleHANDLE_H
-#define ParticleHANDLE_H
-#include "datamodel/Particle.h"
-#include "datamodel/BareParticle.h"
+#ifndef GenJetHANDLE_H
+#define GenJetHANDLE_H
+#include "datamodel/GenJet.h"
+#include "datamodel/BareJet.h"
 
 #include <vector>
 
-// Contains basic particle information.
+// Basic jet information.
 // author: C. Bernet, B. Hegner
 
-//forward declaration of Particle container
-class ParticleCollection;
+//forward declaration of GenJet container
+class GenJetCollection;
 
 namespace albers {
   class Registry;
 }
 
-class ParticleHandle {
+class GenJetHandle {
 
-  friend class ParticleCollection;
+  friend class GenJetCollection;
 
 public:
 
-  ParticleHandle(){};
+  GenJetHandle(){};
 
-//TODO: Proper syntax to use, but ROOT doesn't handle it:  ParticleHandle() = default;
+//TODO: Proper syntax to use, but ROOT doesn't handle it:  GenJetHandle() = default;
 
 
 
@@ -31,29 +31,29 @@ public:
   bool isAvailable() const;
 
   // returns a const (read-only) reference to the object pointed by the Handle.
-  const Particle& read() const {return m_container->at(m_index);}
+  const GenJet& read() const {return m_container->at(m_index);}
 
   // returns a non-const (writeable) reference to the object pointed by the Handle 
-  Particle& mod() {return m_container->at(m_index);}
+  GenJet& mod() {return m_container->at(m_index);}
   
   void prepareForWrite(const albers::Registry*);  // use m_container to set m_containerID properly
   
   void prepareAfterRead(albers::Registry*);   // use m_containerID to set m_container properly
 
   /// equality operator (true if both the index and the container ID are equal)
-  bool operator==(const ParticleHandle& other) const {
+  bool operator==(const GenJetHandle& other) const {
        return (m_index==other.m_index) && (other.m_containerID==other.m_containerID);
   }
 
   /// less comparison operator, so that Handles can be e.g. stored in sets.
-  friend bool operator< (const ParticleHandle& p1,
-			 const ParticleHandle& p2 );
+  friend bool operator< (const GenJetHandle& p1,
+			 const GenJetHandle& p2 );
 
 private:
-  ParticleHandle(int index, int containerID,  std::vector<Particle>* container);
+  GenJetHandle(int index, int containerID,  std::vector<GenJet>* container);
   int m_index;
   int m_containerID;
-  mutable std::vector<Particle>* m_container; //! transient
+  mutable std::vector<GenJet>* m_container; //! transient
   albers::Registry* m_registry; //! transient
   //  bool _retrieveData();
   // members to support 1-to-N relations
