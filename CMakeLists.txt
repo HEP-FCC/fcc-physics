@@ -24,4 +24,5 @@ include_directories(
 
 # Add sub-directories
 add_subdirectory(example)
+add_subdirectory(example-lib)
 
