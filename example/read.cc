@@ -12,7 +12,6 @@
 #include "TBranch.h"
 #include "TFile.h"
 #include "TTree.h"
-#include "TSystem.h"
 #include "TROOT.h"
 #include "TLorentzVector.h"
 
@@ -126,12 +125,16 @@ void processEvent(albers::EventStore& store, bool verbose,
 
 
 int main(){
-  gSystem->Load("libDataModelExample.so");
   albers::Reader reader;
   albers::EventStore store(nullptr);
   store.setReader(&reader);
-  reader.openFile("example.root");
-
+  try {
+    reader.openFile("example.root");
+  }
+  catch(std::runtime_error& err) {
+    std::cerr<<err.what()<<". Quitting."<<std::endl;
+    exit(1);
+  }
   bool verbose = true;
 
   // unsigned nEvents = 5;
