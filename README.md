@@ -3,10 +3,12 @@ analysis-cpp
 
 C++ example analysis package based on the FCC event datamodel
 
-example:	example executable
+example:
+- example executable
 
-example-lib:	example shared library.
-		example executable based on this shared library
+example-lib:
+- shared library to be used from the ROOT command line.
+- ROOT macro based on this shared library
 
 
 Prerequisite: before doing anything,
