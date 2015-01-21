@@ -1,17 +1,15 @@
-analysis-cpp
+pythiafcc
 ============
 
-C++ example analysis package based on the FCC event datamodel
+C++ example analysis package based on the FCC event datamodel,
+pythia, and HepMC
 
 example:
 - example executable
 
-example-lib:
-- shared library to be used from the ROOT command line.
-- ROOT macro based on this shared library
-
 
 Prerequisite: before doing anything,
+- install pythia8, make sure that PYTHIA8_DIR is pointing to the installation prefix of pythia8
 - compile albers and source its init script to set your environment for albers.
 - compile fcc-edm and source its init script to set your environment for fcc-edm
 
@@ -33,13 +31,5 @@ Compilation:
 
 Test of the executable
 
-    ${FCCEDM}/bin/fccedm-write
-    ./install/bin/pythiafcc-read    
-
-Test of the shared library
-
-    ${FCCEDM}/bin/fccedm-write
-    root example-lib/test_macro.C
-    
-
+    ./install/bin/pythiafcc-generate   
 
