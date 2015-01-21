@@ -1,5 +1,5 @@
 {
-  gSystem.Load("libanalysiscpp-myanalysis");
+  gSystem.Load("libpythiafcc-myanalysis");
   MyAnalysis ma;
   ma.loop("example.root");
   TCanvas c1;

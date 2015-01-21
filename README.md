@@ -34,7 +34,7 @@ Compilation:
 Test of the executable
 
     ${FCCEDM}/bin/fccedm-write
-    ./install/bin/analysiscpp-read    
+    ./install/bin/pythiafcc-read    
 
 Test of the shared library
 

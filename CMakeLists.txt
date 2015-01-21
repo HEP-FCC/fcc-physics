@@ -1,5 +1,22 @@
 cmake_minimum_required(VERSION 2.8)
-project(analysiscpp CXX)
+project(pythiafcc CXX)
+
+set(pythia8 $ENV{PYTHIA8_DIR})
+if(NOT pythia8)
+       message(FATAL_ERROR "You need to set PYTHIA8_DIR to the install prefix of pythia.")
+endif()
+set(pythia8data $ENV{PYTHIA8DATA})
+if(NOT pythia8data)
+       message(FATAL_ERROR "You need to set PYTHIA8DATA to the path of the xmldoc directory of your pythia installation")
+endif()
+
+set(hepmc $ENV{HEPMC_PREFIX})
+if(NOT hepmc)
+       message(FATAL_ERROR "You need to set HEPMC_PREFIX to the install prefix of HepMC.")
+else()
+	set(HEPMC_PREFIX $ENV{HEPMC_PREFIX})
+endif()
+
 
 # Set up C++11
 set(CPP11FLAGS "-std=c++11")
@@ -14,12 +31,17 @@ set(CMAKE_PREFIX_PATH $ENV{ALBERS} $ENV{FCCEDM})
 find_package(alberscore REQUIRED)
 find_package(fccedm REQUIRED)
 find_package(ROOT REQUIRED)
+find_package(Pythia8 REQUIRED)
+# set(HEPMC_PREFIX $ENV{HOME}/local)
+find_package(HepMC)
 
 # set up include-directories
 include_directories(
   "${ROOT_INCLUDE_DIR}"
   "${ALBERSCORE_INCLUDE_DIRS}"
   "${FCCEDM_INCLUDE_DIRS}"
+  "${PYTHIA8_INCLUDE_DIRS}"
+  "${HEPMC_INCLUDE}"
   )  
 
 # Add sub-directories

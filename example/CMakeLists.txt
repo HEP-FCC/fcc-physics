@@ -1,6 +1,6 @@
 
-add_executable(analysiscpp-read read.cc)
+add_executable(pythiafcc-generate generate.cc)
 
-target_link_libraries(analysiscpp-read utilities datamodel albers)
+target_link_libraries(pythiafcc-generate utilities datamodel albers ${PYTHIA8_LIBRARIES} ${HEPMC_LIB})
 
-install(TARGETS analysiscpp-read DESTINATION bin)
+install(TARGETS pythiafcc-generate DESTINATION bin)
