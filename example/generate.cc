@@ -22,9 +22,8 @@ int main(){
 
   albers::Registry   registry;
   albers::EventStore store(&registry);
-  albers::Writer     writer("simpleexample.root", &registry);
+  albers::Writer     writer("example.root", &registry);
 
-  unsigned nevents=1000;
 
   EventInfoCollection& evinfocoll = store.create<EventInfoCollection>("EventInfo");
   MCParticleCollection& pcoll = store.create<MCParticleCollection>("MCParticle");
@@ -33,6 +32,8 @@ int main(){
 
   // collections from the dummy generator
   writer.registerForWrite<MCParticleCollection>("MCParticle");
+
+  unsigned nevents=10;
 
   // Generator. Process selection. LHC initialization. Histogram.
   Pythia8::Pythia pythia;
@@ -64,18 +65,26 @@ int main(){
     if (!pythia.next()) continue;
     HepMC::GenEvent* hepmcevt = new HepMC::GenEvent();
     ToHepMC.fill_next_event( pythia, hepmcevt );
-    
-    // MCParticleHandle& ptc = pcoll.create();
-    // ptc.mod().Core.Type = 25;
-    // auto& p4 = ptc.mod().Core.P4;
-    // p4.Pt = static_cast<float>(iev);
-    // p4.Eta = 0.;
-    // p4.Phi = 0.;
-    // p4.Mass = 126.;
 
-    // if(iev%1000 == 0) {
-    //   std::cout<<"writing a single Higgs with pT="<<p4.Pt<<std::endl;
-    // }
+    std::cout<<"Nvtx = "<<hepmcevt->vertices_size()<<std::endl;
+    for ( HepMC::GenEvent::vertex_iterator v = hepmcevt->vertices_begin();
+	  v != hepmcevt->vertices_end(); ++v ) {
+      (*v)->print();
+    }
+
+    std::cout<<"Nptc = "<<hepmcevt->particles_size()<<std::endl;
+    for ( HepMC::GenEvent::particle_iterator ip = hepmcevt->particles_begin();
+	  ip != hepmcevt->particles_end(); ++ip ) {
+      HepMC::GenParticle* hepmcptc = *ip; 
+      MCParticleHandle& ptc = pcoll.create();
+      BareParticle& core = ptc.mod().Core; 
+      core.Type = hepmcptc->pdg_id();
+      core.Status = hepmcptc->status();
+      core.P4.Pt = hepmcptc->momentum().perp();
+      core.P4.Eta = hepmcptc->momentum().eta();
+      core.P4.Phi = hepmcptc->momentum().phi();
+      core.P4.Mass = hepmcptc->momentum().m();
+    }
 
     writer.writeEvent();
     store.next();
