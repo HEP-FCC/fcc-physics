@@ -62,7 +62,7 @@ int main(){
       std::cerr<<"collection EventInfo does not exist!"<<std::endl;
       return 1;
     }
-    EventInfoHandle& evinfo = evinfocoll->create();
+    EventInfoHandle evinfo = evinfocoll->create();
     evinfo.mod().Number = iev;
 
     if (!pythia.next()) continue;
@@ -77,20 +77,20 @@ int main(){
       //      (*iv)->print();
       std::cout<<"hepmc vertex "<<(*iv)<<endl;
       const HepMC::FourVector& vpos = (*iv)->position();
-      GenVertexHandle& vtx = vcoll.create();
+      GenVertexHandle vtx = vcoll.create();
       std::cout<<"vertex "<<vtx.index()<<"/"<<vtx.containerID()<<std::endl;
       vtx.mod().Position.X = vpos.x();
       vtx.mod().Position.Y = vpos.y();
       vtx.mod().Position.Z = vpos.z();
       vtx.mod().Ctau = vpos.t();
-      vtx_map.insert( std::make_pair<HepMC::GenVertex*, GenVertexHandle >(*iv, GenVertexHandle(vtx)) );
+      vtx_map.emplace(*iv, vtx);
       std::cout<<" in map "<<vtx_map[*iv].index()<<"/"<<vtx_map[*iv].containerID()<<std::endl;
     }
     //     std::cout<<"Nptc = "<<hepmcevt->particles_size()<<std::endl;
     for ( HepMC::GenEvent::particle_iterator ip = hepmcevt->particles_begin();
 	  ip != hepmcevt->particles_end(); ++ip ) {
       HepMC::GenParticle* hepmcptc = *ip; 
-      MCParticleHandle& ptc = pcoll.create();
+      MCParticleHandle ptc = pcoll.create();
       BareParticle& core = ptc.mod().Core; 
       core.Type = hepmcptc->pdg_id();
       core.Status = hepmcptc->status();
