@@ -3,6 +3,8 @@
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/MCParticle.h"
 #include "datamodel/MCParticleCollection.h"
+#include "datamodel/GenVertex.h"
+#include "datamodel/GenVertexCollection.h"
 #include "datamodel/LorentzVector.h"
 
 // STL
@@ -26,14 +28,15 @@ int main(){
 
 
   EventInfoCollection& evinfocoll = store.create<EventInfoCollection>("EventInfo");
-  MCParticleCollection& pcoll = store.create<MCParticleCollection>("MCParticle");
+  MCParticleCollection& pcoll = store.create<MCParticleCollection>("GenParticle");
+  GenVertexCollection& vcoll = store.create<GenVertexCollection>("GenVertex");
 
   writer.registerForWrite<EventInfoCollection>("EventInfo");
 
-  // collections from the dummy generator
-  writer.registerForWrite<MCParticleCollection>("MCParticle");
+  writer.registerForWrite<MCParticleCollection>("GenParticle");
+  writer.registerForWrite<GenVertexCollection>("GenVertex");
 
-  unsigned nevents=10;
+  unsigned nevents=1;
 
   // Generator. Process selection. LHC initialization. Histogram.
   Pythia8::Pythia pythia;
@@ -66,13 +69,24 @@ int main(){
     HepMC::GenEvent* hepmcevt = new HepMC::GenEvent();
     ToHepMC.fill_next_event( pythia, hepmcevt );
 
-    std::cout<<"Nvtx = "<<hepmcevt->vertices_size()<<std::endl;
-    for ( HepMC::GenEvent::vertex_iterator v = hepmcevt->vertices_begin();
-	  v != hepmcevt->vertices_end(); ++v ) {
-      (*v)->print();
+    //    std::cout<<"Nvtx = "<<hepmcevt->vertices_size()<<std::endl;
+    typedef std::map<HepMC::GenVertex*, GenVertexHandle > VertexMap;
+    VertexMap vtx_map;
+    for ( HepMC::GenEvent::vertex_iterator iv = hepmcevt->vertices_begin();
+	  iv != hepmcevt->vertices_end(); ++iv ) {
+      //      (*iv)->print();
+      std::cout<<"hepmc vertex "<<(*iv)<<endl;
+      const HepMC::FourVector& vpos = (*iv)->position();
+      GenVertexHandle& vtx = vcoll.create();
+      std::cout<<"vertex "<<vtx.index()<<"/"<<vtx.containerID()<<std::endl;
+      vtx.mod().Position.X = vpos.x();
+      vtx.mod().Position.Y = vpos.y();
+      vtx.mod().Position.Z = vpos.z();
+      vtx.mod().Ctau = vpos.t();
+      vtx_map.insert( std::make_pair<HepMC::GenVertex*, GenVertexHandle >(*iv, GenVertexHandle(vtx)) );
+      std::cout<<" in map "<<vtx_map[*iv].index()<<"/"<<vtx_map[*iv].containerID()<<std::endl;
     }
-
-    std::cout<<"Nptc = "<<hepmcevt->particles_size()<<std::endl;
+    //     std::cout<<"Nptc = "<<hepmcevt->particles_size()<<std::endl;
     for ( HepMC::GenEvent::particle_iterator ip = hepmcevt->particles_begin();
 	  ip != hepmcevt->particles_end(); ++ip ) {
       HepMC::GenParticle* hepmcptc = *ip; 
@@ -84,6 +98,29 @@ int main(){
       core.P4.Eta = hepmcptc->momentum().eta();
       core.P4.Phi = hepmcptc->momentum().phi();
       core.P4.Mass = hepmcptc->momentum().m();
+      hepmcptc->print();
+
+      typedef VertexMap::const_iterator IVM;
+      IVM prodvtx = vtx_map.find(hepmcptc->production_vertex());
+      if(prodvtx!=vtx_map.end()) {
+	ptc.mod().StartVertex = prodvtx->second;
+	std::cout<<"prod vertex found "
+		 <<hepmcptc->production_vertex()<<" "
+		 <<prodvtx->first<<" "
+		 <<prodvtx->second.index()<<"/"
+		 <<prodvtx->second.containerID()<<std::endl;	
+      }
+      else{
+	std::cout<<"no prod vertex found"<<std::endl;
+      }
+      IVM endvtx = vtx_map.find(hepmcptc->end_vertex());
+      if(endvtx!=vtx_map.end()) {
+	ptc.mod().EndVertex = endvtx->second;
+      }
+      else{
+	std::cout<<"no end vertex found"<<std::endl;
+	hepmcptc->print();
+      }
     }
 
     writer.writeEvent();
