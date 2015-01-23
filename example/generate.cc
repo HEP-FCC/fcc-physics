@@ -36,7 +36,7 @@ int main(){
   writer.registerForWrite<MCParticleCollection>("GenParticle");
   writer.registerForWrite<GenVertexCollection>("GenVertex");
 
-  unsigned nevents=1;
+  unsigned nevents=1000;
 
   // Generator. Process selection. LHC initialization. Histogram.
   Pythia8::Pythia pythia;
@@ -75,16 +75,16 @@ int main(){
     for ( HepMC::GenEvent::vertex_iterator iv = hepmcevt->vertices_begin();
 	  iv != hepmcevt->vertices_end(); ++iv ) {
       //      (*iv)->print();
-      std::cout<<"hepmc vertex "<<(*iv)<<endl;
+      // std::cout<<"hepmc vertex "<<(*iv)<<endl;
       const HepMC::FourVector& vpos = (*iv)->position();
       GenVertexHandle vtx = vcoll.create();
-      std::cout<<"vertex "<<vtx.index()<<"/"<<vtx.containerID()<<std::endl;
+      // std::cout<<"vertex "<<vtx.index()<<"/"<<vtx.containerID()<<std::endl;
       vtx.mod().Position.X = vpos.x();
       vtx.mod().Position.Y = vpos.y();
       vtx.mod().Position.Z = vpos.z();
       vtx.mod().Ctau = vpos.t();
       vtx_map.emplace(*iv, vtx);
-      std::cout<<" in map "<<vtx_map[*iv].index()<<"/"<<vtx_map[*iv].containerID()<<std::endl;
+      // std::cout<<" in map "<<vtx_map[*iv].index()<<"/"<<vtx_map[*iv].containerID()<<std::endl;
     }
     //     std::cout<<"Nptc = "<<hepmcevt->particles_size()<<std::endl;
     for ( HepMC::GenEvent::particle_iterator ip = hepmcevt->particles_begin();
@@ -98,28 +98,28 @@ int main(){
       core.P4.Eta = hepmcptc->momentum().eta();
       core.P4.Phi = hepmcptc->momentum().phi();
       core.P4.Mass = hepmcptc->momentum().m();
-      hepmcptc->print();
+      // hepmcptc->print();
 
       typedef VertexMap::const_iterator IVM;
       IVM prodvtx = vtx_map.find(hepmcptc->production_vertex());
       if(prodvtx!=vtx_map.end()) {
 	ptc.mod().StartVertex = prodvtx->second;
-	std::cout<<"prod vertex found "
-		 <<hepmcptc->production_vertex()<<" "
-		 <<prodvtx->first<<" "
-		 <<prodvtx->second.index()<<"/"
-		 <<prodvtx->second.containerID()<<std::endl;	
+	// std::cout<<"prod vertex found "
+		 // <<hepmcptc->production_vertex()<<" "
+		 // <<prodvtx->first<<" "
+		 // <<prodvtx->second.index()<<"/"
+		 // <<prodvtx->second.containerID()<<std::endl;	
       }
       else{
-	std::cout<<"no prod vertex found"<<std::endl;
+	// std::cout<<"no prod vertex found"<<std::endl;
       }
       IVM endvtx = vtx_map.find(hepmcptc->end_vertex());
       if(endvtx!=vtx_map.end()) {
 	ptc.mod().EndVertex = endvtx->second;
       }
       else{
-	std::cout<<"no end vertex found"<<std::endl;
-	hepmcptc->print();
+	// std::cout<<"no end vertex found"<<std::endl;
+	// hepmcptc->print();
       }
     }
 
