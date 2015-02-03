@@ -34,6 +34,7 @@ find_package(ROOT REQUIRED)
 find_package(Pythia8 REQUIRED)
 # set(HEPMC_PREFIX $ENV{HOME}/local)
 find_package(HepMC)
+find_package(Fastjet)
 
 # set up include-directories
 include_directories(
@@ -42,6 +43,7 @@ include_directories(
   "${FCCEDM_INCLUDE_DIRS}"
   "${PYTHIA8_INCLUDE_DIRS}"
   "${HEPMC_INCLUDE}"
+  "${FASTJET_INCLUDE_DIR}"
   )  
 
 # Add sub-directories
