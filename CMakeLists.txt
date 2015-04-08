@@ -14,15 +14,18 @@ set(CMAKE_PREFIX_PATH $ENV{ALBERS} $ENV{FCCEDM})
 find_package(alberscore REQUIRED)
 find_package(fccedm REQUIRED)
 find_package(ROOT REQUIRED)
+find_package(Fastjet)
 
 # set up include-directories
 include_directories(
   "${ROOT_INCLUDE_DIR}"
   "${ALBERSCORE_INCLUDE_DIRS}"
   "${FCCEDM_INCLUDE_DIRS}"
+  "${fastjet_INCLUDE_DIR}"
   )  
 
 # Add sub-directories
 add_subdirectory(example)
 add_subdirectory(example-lib)
+add_subdirectory(tools)
 
