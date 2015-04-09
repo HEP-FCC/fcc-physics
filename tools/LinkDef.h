@@ -5,6 +5,6 @@
 #pragma link off all functions;
 #pragma link C++ nestedclasses;
 
-#pragma link C++ class JetClusterizer+;
+#pragma link C++ class JetClusterizer;
 
 #endif
