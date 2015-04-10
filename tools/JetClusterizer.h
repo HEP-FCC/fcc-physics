@@ -20,7 +20,8 @@ class JetClusterizer {
   JetClusterizer();
   void add_p4(const P4& p4) {m_inputs.push_back(p4);}
   void clusterize();
-
+  void clear() {m_inputs.clear(); m_outputs.clear();}
+  
   unsigned n_jets() const {return m_outputs.size();}
   P4  jet(unsigned i) const;
 
