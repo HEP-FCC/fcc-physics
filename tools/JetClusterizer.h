@@ -24,10 +24,13 @@ class JetClusterizer {
   
   unsigned n_jets() const {return m_outputs.size();}
   P4  jet(unsigned i) const;
+  unsigned n_constituents(unsigned i) const; 
+  unsigned constituent_index(unsigned ijet, unsigned iconst) const; 
 
  private:
   Inputs                          m_inputs;
   Outputs                         m_outputs;
+  std::vector<std::vector<unsigned> > m_constituents;  
 #ifndef __CINT__
   fastjet::JetDefinition          m_definition;
 #endif
