@@ -20,6 +20,7 @@
 
 #include "Pythia8/Pythia.h"
 #include "Pythia8Plugins/HepMC2.h"
+#include "Pythia8/ParticleData.h"
 
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
@@ -42,20 +43,41 @@ int main(){
   writer.registerForWrite<GenVertexCollection>("GenVertex");
   writer.registerForWrite<GenJetCollection>("GenJet");
 
-  unsigned nevents=500;
+  unsigned nevents=5000;
 
   // Generator. Process selection. LHC initialization. Histogram.
   Pythia8::Pythia pythia;
   pythia.readString("Beams:idA = 11");
   pythia.readString("Beams:idB = -11");
+
   pythia.readString("Beams:eCM = 91.");
   pythia.readString("WeakSingleBoson:all = on");
   pythia.readString("WeakZ0:gmZmode = 0");
   pythia.readString("PhaseSpace:pTHatMin = 20.");
+  pythia.readString("23:onMode = off");
+  pythia.readString("23:onIfMatch = 1 1");
   pythia.init();
 
+  // pythia.readString("Beams:eCM = 180.");
+  // pythia.readString("WeakDoubleBoson:ffbar2WW = on");
+
+  // pythia.readString("Beams:eCM = 240.");
+  // pythia.readString("HiggsSM:ffbar2HZ = on");
+  // pythia.readString("23:onMode = off");
+  // pythia.readString("23:onIfMatch = 13 13");
+  // pythia.readString("25:onMode = off");
+  // pythia.readString("25:onIfMatch = 5 5");
+
+  // pythia.readString("Beams:eCM = 350.");
+  // pythia.readString("Top:ffbar2ttbar(s:gmZ) = on");
+
+  // pythia.readString("PhaseSpace:pTHatMin = 20.");
+  // pythia.init();
+
+  
   // Interface for conversion from Pythia8::Event to HepMC event.
   HepMC::Pythia8ToHepMC ToHepMC;
+  Pythia8::ParticleData PDG; 
 
   // Fastjet
 
@@ -119,6 +141,7 @@ int main(){
       MCParticleHandle ptc = pcoll.create();
       BareParticle& core = ptc.mod().Core; 
       core.Type = hepmcptc->pdg_id();
+      core.Charge = pythia.particleData.charge(core.Type);
       core.Status = hepmcptc->status();
       core.P4.Pt = hepmcptc->momentum().perp();
       core.P4.Eta = hepmcptc->momentum().eta();
