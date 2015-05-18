@@ -43,7 +43,7 @@ include_directories(
   "${FCCEDM_INCLUDE_DIRS}"
   "${PYTHIA8_INCLUDE_DIRS}"
   "${HEPMC_INCLUDE}"
-  "${FASTJET_INCLUDE_DIR}"
+  "${fastjet_INCLUDE_DIR}"
   )  
 
 # Add sub-directories
