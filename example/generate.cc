@@ -42,7 +42,7 @@ int main(){
   writer.registerForWrite<GenVertexCollection>("GenVertex");
   writer.registerForWrite<GenJetCollection>("GenJet");
 
-  unsigned nevents=500;
+  unsigned nevents=5000;
 
   // Generator. Process selection. LHC initialization. Histogram.
   Pythia8::Pythia pythia;
