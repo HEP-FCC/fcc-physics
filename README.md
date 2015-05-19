@@ -23,6 +23,10 @@ Before compiling or using on mac os:
 
     source init_macos.sh
 
+Before compiling or using on mac os: 
+
+    source init_linux.sh
+
 Compilation:
 
     mkdir build
