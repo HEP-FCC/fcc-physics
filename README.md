@@ -9,8 +9,15 @@ example:
 
 
 Prerequisite: before doing anything,
-- install pythia8, make sure that PYTHIA8_DIR is pointing to the installation prefix of pythia8
-- compile albers and source its init script to set your environment for albers.
+
+- install HepMC, and make sure that HEPMC_PREFIX is pointing to the installation directory of HepMC. HepMC should be configured for pythia:
+
+     ./configure --prefix=$HEPMC_PREFIX --with-momentum=GEV --with-length=MM
+
+- install pythia8, and make sure that PYTHIA8_DIR is pointing to the installation prefix of pythia8
+
+- compile albers-core and source its init script to set your environment for albers.
+
 - compile fcc-edm and source its init script to set your environment for fcc-edm
 
 Before compiling or using on lxplus:
@@ -20,6 +27,10 @@ Before compiling or using on lxplus:
 Before compiling or using on mac os: 
 
     source init_macos.sh
+
+Before compiling or using on linux (tested on Ubuntu):
+
+    source init_linux.sh
 
 Compilation:
 
