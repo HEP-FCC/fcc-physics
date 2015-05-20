@@ -11,8 +11,21 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -DDROP_CGAL ${CPP11FLAGS} -Wall -W
 # Make sure we find the Find*.cmake functions distributed with this package
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set(CMAKE_PREFIX_PATH $ENV{ALBERS} $ENV{FCCEDM})
+
 find_package(alberscore REQUIRED)
+message(STATUS "Found albers-core: ${alberscore_DIR}")
+# Make sure the library is found.
+# Not the case if LD_LIBRARY_PATH is wrong
+find_library(ALBERSLIB albers)
+if (NOT ALBERSLIB)
+    message(FATAL_ERROR "libalbers.so(dylib) cannot be found dynamically. Make sure you have sourced albers-core init*.sh file to set up your environment to use albers")
+endif()
+
 find_package(fccedm REQUIRED)
+message(STATUS "Found fcc-edm: ${fccedm_DIR}")
+# find_library(FCCEDMLIB datamodel HINTS ${fccedm_LIBRARIES})
+# message("FCCEDM ${FCCEDMLIB}")
+
 find_package(ROOT REQUIRED)
 find_package(Fastjet)
 
