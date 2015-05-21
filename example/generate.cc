@@ -143,9 +143,9 @@ int main(){
       core.Type = hepmcptc->pdg_id();
       core.Charge = pythia.particleData.charge(core.Type);
       core.Status = hepmcptc->status();
-      core.P4.Pt = hepmcptc->momentum().perp();
-      core.P4.Eta = hepmcptc->momentum().eta();
-      core.P4.Phi = hepmcptc->momentum().phi();
+      core.P4.Px = hepmcptc->momentum().px();
+      core.P4.Py = hepmcptc->momentum().py();
+      core.P4.Pz = hepmcptc->momentum().pz();
       core.P4.Mass = hepmcptc->momentum().m();
       // hepmcptc->print();
 
@@ -187,9 +187,9 @@ int main(){
       // cout<<"\t"<<jets[i].pt()<<" "<<jets[i].eta()<<" "<<jets[i].phi()<<endl;
       GenJetHandle genjet = genjetcoll.create();
       BareJet& core = genjet.mod().Core;
-      core.P4.Pt = jets[i].pt();
-      core.P4.Eta = jets[i].eta();
-      core.P4.Phi = jets[i].phi();
+      core.P4.Px = jets[i].px();
+      core.P4.Py = jets[i].py();
+      core.P4.Pz = jets[i].pz();
       core.P4.Mass = jets[i].m();    
     }
 
