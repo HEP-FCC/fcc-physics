@@ -54,8 +54,8 @@ int main(){
   pythia.readString("WeakSingleBoson:all = on");
   pythia.readString("WeakZ0:gmZmode = 0");
   pythia.readString("PhaseSpace:pTHatMin = 20.");
-  pythia.readString("23:onMode = off");
-  pythia.readString("23:onIfMatch = 1 1");
+  // pythia.readString("23:onMode = off");
+  // pythia.readString("23:onIfMatch = 1 1");
   pythia.init();
 
   // pythia.readString("Beams:eCM = 180.");
