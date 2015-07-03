@@ -43,7 +43,7 @@ int main(){
   writer.registerForWrite<GenVertexCollection>("GenVertex");
   writer.registerForWrite<GenJetCollection>("GenJet");
 
-  unsigned nevents=50000;
+  unsigned nevents=5000;
 
   // Generator. Process selection. LHC initialization. Histogram.
   Pythia8::Pythia pythia;
@@ -52,8 +52,8 @@ int main(){
 
   pythia.readString("Beams:eCM = 91.");
   pythia.readString("WeakSingleBoson:all = on");
-  pythia.readString("WeakZ0:gmZmode = 0");
-  pythia.readString("PhaseSpace:pTHatMin = 20.");
+  // pythia.readString("WeakZ0:gmZmode = 0");
+  // pythia.readString("PhaseSpace:pTHatMin = 20.");
   // pythia.readString("23:onMode = off");
   // pythia.readString("23:onIfMatch = 1 1");
   pythia.init();
