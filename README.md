@@ -21,7 +21,7 @@ Also make sure you are configuring pythia with the version of HepMC you have jus
      export PYTHIA8_DIR=$HOME/local
      ./configure --prefix=$PYTHIA8_DIR --with-hepmc2=$HEPMC_PREFIX
 
-- In case you're not working on lxplus, install fastjet, and make sure the fastjet-config executable is in your PATH. 
+- In case you're not working on lxplus, install fastjet, make sure the fastjet-config executable is in your PATH, and make sure the fastjet shared libraries are in your LD_LIBRARY_PATH (on linux) or in your DYLD_LIBRARY_PATH (macOS).
 
 - compile albers-core and source its init script to set your environment for albers.
 
