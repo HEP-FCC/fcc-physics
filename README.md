@@ -7,8 +7,15 @@ pythia, and HepMC
 example:
 - example executable
 
+External softare
+================
 
-Prerequisite, before doing anything: 
+This package depends on pythia8, and HepMC2.
+You must therefore make sure that this software is installed on your machine.
+
+If you work on lxplus, all the necessary software is picked up from afs, and you can proceed to next section
+
+If you work on another machine: 
 
 - install the latest HepMC 2.X in an installation directory of your choice (e.g. $HOME/local). make sure HEPMC_PREFIX is pointing to this installation directory. HepMC should be configured for pythia:
 
@@ -22,6 +29,10 @@ Also make sure you are configuring pythia with the version of HepMC you have jus
      ./configure --prefix=$PYTHIA8_DIR --with-hepmc2=$HEPMC_PREFIX
 
 - In case you're not working on lxplus, install fastjet, make sure the fastjet-config executable is in your PATH, and make sure the fastjet shared libraries are in your LD_LIBRARY_PATH (on linux) or in your DYLD_LIBRARY_PATH (macOS).
+
+
+Installation
+=============
 
 - compile albers-core and source its init script to set your environment for albers.
 
