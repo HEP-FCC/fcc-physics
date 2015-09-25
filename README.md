@@ -10,10 +10,10 @@ example:
 External softare
 ================
 
-This package depends on pythia8, and HepMC2.
+This package depends on HepMC2, Pythia8 and FastJet.
 You must therefore make sure that this software is installed on your machine.
 
-If you work on lxplus, all the necessary software is picked up from afs, and you can proceed to next section
+If you work on lxplus, all the necessary software is picked from afs, and you can proceed to next section
 
 If you work on another machine: 
 
@@ -28,7 +28,7 @@ Also make sure you are configuring pythia with the version of HepMC you have jus
      export PYTHIA8_DIR=$HOME/local
      ./configure --prefix=$PYTHIA8_DIR --with-hepmc2=$HEPMC_PREFIX
 
-- In case you're not working on lxplus, install fastjet, make sure the fastjet-config executable is in your PATH, and make sure the fastjet shared libraries are in your LD_LIBRARY_PATH (on linux) or in your DYLD_LIBRARY_PATH (macOS).
+- Install fastjet, and make sure FASTJET_ROOT_DIR is pointing to its installation directory
 
 
 Installation
@@ -63,3 +63,8 @@ Test of the executable
 
     ./install/bin/pythiafcc-generate   
 
+To configure pythia differently, edit example/generate.cc, and recompile
+
+    cd build
+    make -j 4 install
+    
