@@ -61,7 +61,7 @@ Compilation:
 
 Test of the executable
 
-    ./install/bin/pythiafcc-generate   
+    pythiafcc-generate example/ZH_Zmumu_Hbb.txt 
 
 To configure pythia differently, edit example/generate.cc, and recompile
 
