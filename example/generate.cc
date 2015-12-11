@@ -27,7 +27,14 @@
 
 using namespace std;
 
-int main(){
+int main(int argc, char** argv) {
+
+  if( argc != 2) {
+    std::cerr<<"Usage: pythiafcc-generate <pythia card file>"<<std::endl;
+    return 1;
+  }
+  const char* card_file = argv[1]; 
+  
   std::cout<<"start processing"<<std::endl;
 
   albers::Registry   registry;
@@ -45,13 +52,15 @@ int main(){
   writer.registerForWrite<GenVertexCollection>("GenVertex");
   writer.registerForWrite<GenJetCollection>("GenJet");
 
-  unsigned nevents=5000;
-
   // Generator. Process selection. LHC initialization. Histogram.
   Pythia8::Pythia pythia;
-  pythia.readString("Beams:idA = 11");
-  pythia.readString("Beams:idB = -11");
-
+  pythia.readFile(card_file);
+  pythia.init();
+  
+  unsigned nevents = pythia.mode("Main:numberOfEvents");
+  
+  // pythia.readString("Beams:idA = 11");
+  // pythia.readString("Beams:idB = -11");
   // pythia.readString("Beams:eCM = 91.");
   // pythia.readString("WeakSingleBoson:all = on");
   // pythia.readString("WeakZ0:gmZmode = 0");
@@ -59,24 +68,20 @@ int main(){
   // pythia.readString("23:onMode = off");
   // pythia.readString("23:onIfMatch = 1 1");
   // pythia.init();
-
+  
   // pythia.readString("Beams:eCM = 180.");
   // pythia.readString("WeakDoubleBoson:ffbar2WW = on");
-
-  pythia.readString("Beams:eCM = 240.");
-  pythia.readString("HiggsSM:ffbar2HZ = on");
-  pythia.readString("23:onMode = off");
-  pythia.readString("23:onIfMatch = 13 13");
-  pythia.readString("25:onMode = off");
-  pythia.readString("25:onIfMatch = 5 5");
+  // pythia.readString("Beams:eCM = 240.");
+  // pythia.readString("HiggsSM:ffbar2HZ = on");
+  // pythia.readString("23:onMode = off");
+  // pythia.readString("23:onIfMatch = 13 13");
+  // pythia.readString("25:onMode = off");
+  // pythia.readString("25:onIfMatch = 5 5");
 
   // pythia.readString("Beams:eCM = 350.");
   // pythia.readString("Top:ffbar2ttbar(s:gmZ) = on");
 
   // pythia.readString("PhaseSpace:pTHatMin = 20.");
-  
-  pythia.init();
-
   
   // Interface for conversion from Pythia8::Event to HepMC event.
   HepMC::Pythia8ToHepMC ToHepMC;
