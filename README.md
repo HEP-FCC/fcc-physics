@@ -15,17 +15,9 @@ Prerequisite: before doing anything,
 - compile albers and source its init script to set your environment for albers.
 - compile fcc-edm and source its init script to set your environment for fcc-edm
 
-Before compiling or using on lxplus:
+Before compiling or using 
 
     source ./init.sh
-
-Before compiling or using on mac os: 
-
-    source ./init_macos.sh
-
-Before compiling or using on mac os: 
-
-    source ./init_linux.sh
 
 Compilation:
 
