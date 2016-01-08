@@ -39,17 +39,9 @@ Installation
 - compile fcc-edm and source its init script to set your environment for fcc-edm
 
 
-Before compiling or using on lxplus:
+Before compiling or using
 
     source ./init.sh
-
-Before compiling or using on mac os: 
-
-    source ./init_macos.sh
-
-Before compiling or using on linux (tested on Ubuntu):
-
-    source ./init_linux.sh
 
 Compilation:
 
@@ -61,10 +53,5 @@ Compilation:
 
 Test of the executable
 
-    ./install/bin/pythiafcc-generate   
+    pythiafcc-generate example/ZH_Zmumu_Hbb.txt   
 
-To configure pythia differently, edit example/generate.cc, and recompile
-
-    cd build
-    make -j 4 install
-    
