@@ -6,12 +6,12 @@
 
 namespace albers {
   class EventStore;
-  class Reader; 
-};
+  class Reader;
+}
 
 class MyAnalysis {
  public:
-  MyAnalysis(); 
+  MyAnalysis();
   void loop(const char* filename);
   void processEvent(albers::EventStore& store, bool verbose,
 		    albers::Reader& reader);
