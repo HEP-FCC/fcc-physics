@@ -74,10 +74,10 @@ int main(){
   // pythia.readString("PhaseSpace:pTHatMin = 20.");
   // pythia.init();
 
-  
+
   // Interface for conversion from Pythia8::Event to HepMC event.
   HepMC::Pythia8ToHepMC ToHepMC;
-  Pythia8::ParticleData PDG; 
+  Pythia8::ParticleData PDG;
 
   // Fastjet
 
@@ -86,8 +86,8 @@ int main(){
   double rparam = 0.5;
   fastjet::JetDefinition jet_def(fastjet::antikt_algorithm, rparam,
                                  recomb_scheme, strategy);
-  
-  vector<fastjet::PseudoJet> input_particles;
+
+  std::vector<fastjet::PseudoJet> input_particles;
   // input_particles.push_back( fastjet::PseudoJet(10,0,0,10) );
   // input_particles.push_back( fastjet::PseudoJet(-10,0,0,10) );
   // fastjet::ClusterSequence clust_seq(input_particles, jet_def);
@@ -97,7 +97,7 @@ int main(){
   // for(unsigned i=0; i<jets.size(); ++i) {
   //   cout<<"\t"<<jets[i].pt()<<" "<<jets[i].eta()<<" "<<jets[i].phi()<<endl;
   // }
-  
+
   for(unsigned iev=0; iev<nevents; ++iev) {
     // fill event information
     EventInfoCollection* evinfocoll = nullptr;
@@ -137,9 +137,9 @@ int main(){
     input_particles.clear();
     for ( HepMC::GenEvent::particle_iterator ip = hepmcevt->particles_begin();
 	  ip != hepmcevt->particles_end(); ++ip ) {
-      HepMC::GenParticle* hepmcptc = *ip; 
+      HepMC::GenParticle* hepmcptc = *ip;
       MCParticleHandle ptc = pcoll.create();
-      BareParticle& core = ptc.mod().Core; 
+      BareParticle& core = ptc.mod().Core;
       core.Type = hepmcptc->pdg_id();
       core.Charge = pythia.particleData.charge(core.Type);
       core.Status = hepmcptc->status();
@@ -155,8 +155,8 @@ int main(){
 						      hepmcptc->momentum().pz(),
 						      hepmcptc->momentum().e() ));
       }
-      vector<fastjet::PseudoJet> input_particles;
-      
+      std::vector<fastjet::PseudoJet> input_particles;
+
       typedef VertexMap::const_iterator IVM;
       IVM prodvtx = vtx_map.find(hepmcptc->production_vertex());
       if(prodvtx!=vtx_map.end()) {
@@ -165,7 +165,7 @@ int main(){
 		 // <<hepmcptc->production_vertex()<<" "
 		 // <<prodvtx->first<<" "
 		 // <<prodvtx->second.index()<<"/"
-		 // <<prodvtx->second.containerID()<<std::endl;	
+		 // <<prodvtx->second.containerID()<<std::endl;
       }
       else{
 	// std::cout<<"no prod vertex found"<<std::endl;
@@ -181,7 +181,7 @@ int main(){
     }
     fastjet::ClusterSequence clust_seq(input_particles, jet_def);
     double ptmin = 10;
-    vector<fastjet::PseudoJet> jets = clust_seq.inclusive_jets(ptmin);
+    std::vector<fastjet::PseudoJet> jets = clust_seq.inclusive_jets(ptmin);
     // cout<<"jets:"<<endl;
     for(unsigned i=0; i<jets.size(); ++i) {
       // cout<<"\t"<<jets[i].pt()<<" "<<jets[i].eta()<<" "<<jets[i].phi()<<endl;
@@ -190,7 +190,7 @@ int main(){
       core.P4.Px = jets[i].px();
       core.P4.Py = jets[i].py();
       core.P4.Pz = jets[i].pz();
-      core.P4.Mass = jets[i].m();    
+      core.P4.Mass = jets[i].m();
     }
 
     writer.writeEvent();
