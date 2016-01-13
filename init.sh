@@ -1,10 +1,10 @@
-export FASTJET_ROOT_DIR=/afs/cern.ch/sw/lcg/releases/LCG_72a/fastjet/3.1.1/x86_64-slc6-gcc48-opt
+export FASTJET_ROOT_DIR=/afs/cern.ch/exp/fcc/sw/0.5/LCG_80/fastjet/3.1.1/x86_64-slc6-gcc49-opt
 export PATH=/afs/cern.ch/sw/lcg/contrib/CMake/2.8.9/Linux-i386/bin:${PATH}
-source /afs/cern.ch/sw/lcg/contrib/gcc/4.8.1/x86_64-slc6/setup.sh
-source /afs/cern.ch/sw/lcg/app/releases/ROOT/5.34.20/x86_64-slc6-gcc48-opt/root/bin/thisroot.sh
+source /afs/cern.ch/sw/lcg/contrib/gcc/4.9.3/x86_64-slc6/setup.sh
+source /afs/cern.ch/exp/fcc/sw/0.5/LCG_80/ROOT/6.04.06/x86_64-slc6-gcc49-opt/bin/thisroot.sh
 
-export PYTHIA8_DIR=/afs/cern.ch/sw/lcg/releases/LCG_72a/MCGenerators/pythia8/210/x86_64-slc6-gcc48-opt/
-export HEPMC_PREFIX=/afs/cern.ch/sw/lcg/releases/LCG_72a/HepMC/2.06.09/x86_64-slc6-gcc48-opt/
+export PYTHIA8_DIR=/afs/cern.ch/exp/fcc/sw/0.5/LCG_80/MCGenerators/pythia8/212/x86_64-slc6-gcc49-opt
+export HEPMC_PREFIX=/afs/cern.ch/exp/fcc/sw/0.5/LCG_80/HepMC/2.06.09/x86_64-slc6-gcc49-opt
 
 export PYTHIA8DATA=${PYTHIA8_DIR}/share/Pythia8/xmldoc
 export PYTHIAFCC=$PWD/install
