@@ -35,7 +35,6 @@ Test of the executable
 Test of the shared library
 
     ${FCCEDM}/bin/fccedm-write
-    root example-lib/test_macro.C
-    
+    python -i example-lib/test_macro.py 
 
 
