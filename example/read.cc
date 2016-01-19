@@ -19,27 +19,21 @@
 #include <vector>
 #include <iostream>
 
-// albers specific includes
-#include "albers/EventStore.h"
-#include "albers/Reader.h"
-#include "albers/Registry.h"
+// podio specific includes
+#include "podio/EventStore.h"
+#include "podio/ROOTReader.h"
 
-void processEvent(albers::EventStore& store, bool verbose,
-		  albers::Reader& reader) {
+void processEvent(podio::EventStore& store, bool verbose,
+                  podio::ROOTReader& reader) {
 
   // read event information
-  EventInfoCollection* evinfocoll(nullptr);
-  bool evinfo_available = store.get("EventInfo",evinfocoll);
+  const EventInfoCollection* evinfocoll(nullptr);
+  bool evinfo_available = store.get("EventInfo", evinfocoll);
   if(evinfo_available) {
-    const EventInfoHandle& evinfoHandle = evinfocoll->get(0);
-    const EventInfo& evinfo = evinfoHandle.read();
+    auto evinfo = evinfocoll->at(0);
+
     if(verbose)
-      std::cout << "event number " << evinfo.Number << std::endl;
-    // COLIN avoid bug at first event
-    if(evinfo.Number==0) {
-      std::cerr<<"skipping bugged first event"<<std::endl;
-      return;
-    }
+      std::cout << "event number " << evinfo.Number() << std::endl;
   }
 
   // the following is commented out to test on-demand reading through Jet-Particle association,
@@ -54,70 +48,72 @@ void processEvent(albers::EventStore& store, bool verbose,
   // }
 
   // read jets
-  JetCollection* jrefs(nullptr);
+  const JetCollection* jrefs(nullptr);
   bool jets_available = store.get("GenJet",jrefs);
-  std::vector<ParticleHandle> injets;
+  std::vector<Particle> injets;
 
   if (jets_available){
-    JetParticleAssociationCollection* jprefs(nullptr);
+    const JetParticleAssociationCollection* jprefs(nullptr);
     bool assoc_available = store.get("GenJetParticle",jprefs);
     if(verbose) {
-      reader.getRegistry()->print();
+      reader.getCollectionIDTable()->print();
       std::cout << "jet collection:" << std::endl;
     }
     for(const auto& jet : *jrefs){
-      std::vector<ParticleHandle> jparticles = utils::associatedParticles(jet,
-									  *jprefs);
-      TLorentzVector lv = utils::lvFromPOD(jet.read().Core.P4);
+      std::vector<Particle> jparticles = utils::associatedParticles(jet,
+                                                                          *jprefs);
+      TLorentzVector lv = utils::lvFromPOD(jet.Core().P4);
       if(verbose)
-	std::cout << "\tjet: E=" << lv.E() << " "<<lv.Eta()<<" "<<lv.Phi()
-		  <<" npart="<<jparticles.size()<<std::endl;
+        std::cout << "\tjet: E=" << lv.E() << " "<<lv.Eta()<<" "<<lv.Phi()
+                  <<" npart="<<jparticles.size()<<std::endl;
       if(assoc_available) {
-	for(const auto& part : jparticles) {
-	  if(part.isAvailable()) {
-	    if(verbose)
-	      std::cout<<"\t\tassociated "<<part<<std::endl;
-	    injets.push_back(part);
-	  }
-	}
+        for(const auto& part : jparticles) {
+          if(part.isAvailable()) {
+            if(verbose)
+              std::cout<<"\t\tassociated "<<part<<std::endl;
+            injets.push_back(part);
+          }
+        }
       }
     }
   }
 
   // read particles
-  ParticleCollection* ptcs(nullptr);
-  bool particles_available = store.get("GenParticle",ptcs);
+  const ParticleCollection* ptcs(nullptr);
+  bool particles_available = store.get("GenParticle", ptcs);
   if (particles_available){
-    std::vector<ParticleHandle> muons;
+    std::vector<Particle> muons;
+    // there is probably a smarter way to get a vector from collection?
+
     if(verbose)
       std::cout << "particle collection:" << std::endl;
     for(const auto& ptc : *ptcs){
       if(verbose)
-	std::cout<<"\t"<<ptc<<std::endl;
-      if( ptc.read().Core.Type == 4 )
-	muons.push_back(ptc);
+        std::cout<<"\t"<<ptc<<std::endl;
+      if( ptc.Core().Type == 4 ) {
+        muons.push_back(ptc);
+      }
     }
     // listing particles that are not used in a jet
-    const std::vector<ParticleHandle>& particles = ptcs->getHandles();
-    std::vector<ParticleHandle> unused = utils::unused(particles, injets);
+    std::vector<Particle> unused = utils::unused(*ptcs, injets);
     if(verbose)
-      std::cout<<"unused particles: "<<unused.size()<<"/"<<particles.size()<<" "<<injets.size()<<std::endl;
+      std::cout<<"unused particles: "<<unused.size()<<"/"<<ptcs->size()<<" "<<injets.size()<<std::endl;
 
     // computing isolation for first muon
     if(not muons.empty()) {
-      const ParticleHandle& muon = muons[0];
+      const Particle& muon = muons[0];
       float dRMax = 0.5;
-      const std::vector<ParticleHandle> incone = utils::inCone( muon.read().Core.P4,
-								particles,
-								dRMax);
+      const std::vector<Particle> incone = utils::inCone( muon.Core().P4,
+                                                          *ptcs,
+                                                          dRMax);
       float sumpt = utils::sumPt(incone);
       if( verbose ) {
-	std::cout<<"muon: "<<muon<<" sumpt "<<sumpt<<std::endl;
-	std::cout<<"\tparticles in cone:"<<std::endl;
+        std::cout<<"muon: "<<muon<<" sumpt "<<sumpt<<std::endl;
+        std::cout<<"\tparticles in cone:"<<std::endl;
       }
       for(const auto& ptc : incone) {
-	if( verbose )
-	  std::cout<<"\t"<<ptc<<std::endl;
+        if( verbose )
+          std::cout<<"\t"<<ptc<<std::endl;
       }
     }
   }
@@ -125,9 +121,8 @@ void processEvent(albers::EventStore& store, bool verbose,
 
 
 int main(){
-  albers::Reader reader;
-  albers::EventStore store(nullptr);
-  store.setReader(&reader);
+  auto reader = podio::ROOTReader();
+  auto store = podio::EventStore();
   try {
     reader.openFile("example.root");
   }
@@ -135,17 +130,21 @@ int main(){
     std::cerr<<err.what()<<". Quitting."<<std::endl;
     exit(1);
   }
+  store.setReader(&reader);
+
   bool verbose = true;
 
   // unsigned nEvents = 5;
   unsigned nEvents = reader.getEntries();
   for(unsigned i=0; i<nEvents; ++i) {
-    if(i%1000==0)
+    if(i%1000==0) {
       std::cout<<"reading event "<<i<<std::endl;
-    if(i>10)
+    }
+    if(i>10) {
       verbose = false;
+    }
     processEvent(store, verbose, reader);
-    store.endOfEvent();
+    store.clear();
     reader.endOfEvent();
   }
   return 0;
