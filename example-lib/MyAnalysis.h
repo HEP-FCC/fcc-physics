@@ -4,17 +4,17 @@
 #include "TObject.h"
 #include "TH1F.h"
 
-namespace albers {
+namespace podio {
   class EventStore;
-  class Reader; 
-};
+  class ROOTReader;
+}
 
 class MyAnalysis {
  public:
-  MyAnalysis(); 
+  MyAnalysis();
   void loop(const char* filename);
-  void processEvent(albers::EventStore& store, bool verbose,
-		    albers::Reader& reader);
+  void processEvent(podio::EventStore& store, bool verbose,
+		    podio::ROOTReader& reader);
   TH1F m_hjetenergy;
   TH1F m_hjetnparts;
 };
