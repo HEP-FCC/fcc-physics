@@ -12,6 +12,6 @@ ROOT_GENERATE_DICTIONARY(pythiafcc-MyAnalysisDict *.h LINKDEF LinkDef.h )
 
 add_library(pythiafcc-myanalysis SHARED ${sources} ${headers} ${}pythiafcc-MyAnalysisDict.cxx)
 
-target_link_libraries(pythiafcc-myanalysis utilities datamodel albers ${ROOT_LIBRARIES} ${ROOT_COMPONENT_LIBRARIES})
+target_link_libraries(pythiafcc-myanalysis utilities datamodel podio ${ROOT_LIBRARIES} ${ROOT_COMPONENT_LIBRARIES})
 
 install(TARGETS pythiafcc-myanalysis DESTINATION lib)
