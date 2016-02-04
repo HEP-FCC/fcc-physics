@@ -27,7 +27,7 @@ void processEvent(podio::EventStore& store, bool verbose,
                   podio::ROOTReader& reader) {
 
   // read event information
-  const EventInfoCollection* evinfocoll(nullptr);
+  const fcc::EventInfoCollection* evinfocoll(nullptr);
   bool evinfo_available = store.get("EventInfo", evinfocoll);
   if(evinfo_available) {
     auto evinfo = evinfocoll->at(0);
@@ -48,19 +48,19 @@ void processEvent(podio::EventStore& store, bool verbose,
   // }
 
   // read jets
-  const JetCollection* jrefs(nullptr);
+  const fcc::JetCollection* jrefs(nullptr);
   bool jets_available = store.get("GenJet",jrefs);
-  std::vector<Particle> injets;
+  std::vector<fcc::Particle> injets;
 
   if (jets_available){
-    const JetParticleAssociationCollection* jprefs(nullptr);
+    const fcc::JetParticleAssociationCollection* jprefs(nullptr);
     bool assoc_available = store.get("GenJetParticle",jprefs);
     if(verbose) {
       reader.getCollectionIDTable()->print();
       std::cout << "jet collection:" << std::endl;
     }
     for(const auto& jet : *jrefs){
-      std::vector<Particle> jparticles = utils::associatedParticles(jet,
+      std::vector<fcc::Particle> jparticles = utils::associatedParticles(jet,
                                                                           *jprefs);
       TLorentzVector lv = utils::lvFromPOD(jet.Core().P4);
       if(verbose)
@@ -79,10 +79,10 @@ void processEvent(podio::EventStore& store, bool verbose,
   }
 
   // read particles
-  const ParticleCollection* ptcs(nullptr);
+  const fcc::ParticleCollection* ptcs(nullptr);
   bool particles_available = store.get("GenParticle", ptcs);
   if (particles_available){
-    std::vector<Particle> muons;
+    std::vector<fcc::Particle> muons;
     // there is probably a smarter way to get a vector from collection?
 
     if(verbose)
@@ -95,15 +95,15 @@ void processEvent(podio::EventStore& store, bool verbose,
       }
     }
     // listing particles that are not used in a jet
-    std::vector<Particle> unused = utils::unused(*ptcs, injets);
+    std::vector<fcc::Particle> unused = utils::unused(*ptcs, injets);
     if(verbose)
       std::cout<<"unused particles: "<<unused.size()<<"/"<<ptcs->size()<<" "<<injets.size()<<std::endl;
 
     // computing isolation for first muon
     if(not muons.empty()) {
-      const Particle& muon = muons[0];
+      const auto& muon = muons[0];
       float dRMax = 0.5;
-      const std::vector<Particle> incone = utils::inCone( muon.Core().P4,
+      const std::vector<fcc::Particle> incone = utils::inCone( muon.Core().P4,
                                                           *ptcs,
                                                           dRMax);
       float sumpt = utils::sumPt(incone);

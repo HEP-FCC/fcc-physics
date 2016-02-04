@@ -54,19 +54,19 @@ void MyAnalysis::processEvent(podio::EventStore& store, bool verbose,
                               podio::ROOTReader& reader) {
 
   // read jets
-  const JetCollection* jrefs(nullptr);
+  const fcc::JetCollection* jrefs(nullptr);
   bool jets_available = store.get("GenJet",jrefs);
-  std::vector<Particle> injets;
+  std::vector<fcc::Particle> injets;
 
   if (jets_available){
-    const JetParticleAssociationCollection* jprefs(nullptr);
+    const fcc::JetParticleAssociationCollection* jprefs(nullptr);
     bool assoc_available = store.get("GenJetParticle",jprefs);
     if(verbose) {
       reader.getCollectionIDTable()->print();
       std::cout << "jet collection:" << std::endl;
     }
     for(const auto& jet : *jrefs){
-      std::vector<Particle> jparticles = utils::associatedParticles(jet,
+      std::vector<fcc::Particle> jparticles = utils::associatedParticles(jet,
                                                                     *jprefs);
       TLorentzVector lv = utils::lvFromPOD(jet.Core().P4);
       m_hjetenergy.Fill(lv.E());
