@@ -28,10 +28,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -DDROP_CGAL ${CPP11FLAGS} -Wall -W
 # Make sure we find the Find*.cmake functions distributed with this package
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set(CMAKE_PREFIX_PATH $ENV{ALBERS} $ENV{FCCEDM})
-find_package(alberscore COMPONENTS albers REQUIRED)
-message(STATUS "Found albers-core: ${alberscore_DIR}")
+find_package(podio COMPONENTS podio REQUIRED)
+link_directories(${podio_LIBRARY_DIR})
+message(STATUS "Found PDIO: ${podio_DIR}")
 find_package(fccedm REQUIRED)
 message(STATUS "Found fcc-edm: ${fccedm_DIR}")
+link_directories(${fccedm_LIBRARY_DIR})
 find_package(ROOT REQUIRED)
 find_package(Pythia8 REQUIRED)
 # set(HEPMC_PREFIX $ENV{HOME}/local)
@@ -41,12 +43,12 @@ find_package(Fastjet)
 # set up include-directories
 include_directories(
   "${ROOT_INCLUDE_DIR}"
-  "${ALBERSCORE_INCLUDE_DIRS}"
+  "${podio_INCLUDE_DIRS}"
   "${FCCEDM_INCLUDE_DIRS}"
   "${PYTHIA8_INCLUDE_DIRS}"
   "${HEPMC_INCLUDE}"
   "${fastjet_INCLUDE_DIR}"
-  )  
+  )
 
 # Add sub-directories
 add_subdirectory(example)

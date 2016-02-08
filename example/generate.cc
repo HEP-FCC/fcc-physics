@@ -14,9 +14,8 @@
 #include <vector>
 
 // albers specific includes
-#include "albers/EventStore.h"
-#include "albers/Registry.h"
-#include "albers/Writer.h"
+#include "podio/EventStore.h"
+#include "podio/ROOTWriter.h"
 
 #include "Pythia8/Pythia.h"
 #include "Pythia8Plugins/HepMC2.h"
@@ -28,20 +27,19 @@
 int main(){
   std::cout<<"start processing"<<std::endl;
 
-  albers::Registry   registry;
-  albers::EventStore store(&registry);
-  albers::Writer     writer("example.root", &registry);
+  auto store  = podio::EventStore();
+  auto writer = podio::ROOTWriter("example.root", &store);
 
 
-  EventInfoCollection& evinfocoll = store.create<EventInfoCollection>("EventInfo");
-  MCParticleCollection& pcoll = store.create<MCParticleCollection>("GenParticle");
-  GenVertexCollection& vcoll = store.create<GenVertexCollection>("GenVertex");
-  GenJetCollection& genjetcoll = store.create<GenJetCollection>("GenJet");
+  fcc::EventInfoCollection& evinfocoll = store.create<fcc::EventInfoCollection>("EventInfo");
+  fcc::MCParticleCollection& pcoll = store.create<fcc::MCParticleCollection>("GenParticle");
+  fcc::GenVertexCollection& vcoll = store.create<fcc::GenVertexCollection>("GenVertex");
+  fcc::GenJetCollection& genjetcoll = store.create<fcc::GenJetCollection>("GenJet");
 
-  writer.registerForWrite<EventInfoCollection>("EventInfo");
-  writer.registerForWrite<MCParticleCollection>("GenParticle");
-  writer.registerForWrite<GenVertexCollection>("GenVertex");
-  writer.registerForWrite<GenJetCollection>("GenJet");
+  writer.registerForWrite<fcc::EventInfoCollection>("EventInfo");
+  writer.registerForWrite<fcc::MCParticleCollection>("GenParticle");
+  writer.registerForWrite<fcc::GenVertexCollection>("GenVertex");
+  writer.registerForWrite<fcc::GenJetCollection>("GenJet");
 
   unsigned nevents=5000;
 
@@ -100,36 +98,31 @@ int main(){
 
   for(unsigned iev=0; iev<nevents; ++iev) {
     // fill event information
-    EventInfoCollection* evinfocoll = nullptr;
     // here, asking the store for the collection.
     // could also just reuse the reference obtained at the time of the creation
     // of the collection
-    store.get("EventInfo", evinfocoll);
-    if(evinfocoll==nullptr) {
-      std::cerr<<"collection EventInfo does not exist!"<<std::endl;
-      return 1;
-    }
-    EventInfoHandle evinfo = evinfocoll->create();
-    evinfo.mod().Number = iev;
+    auto& evinfocoll = store.create<fcc::EventInfoCollection> ("EventInfo");
+    fcc::EventInfo evinfo = evinfocoll.create();
+    evinfo.Number(iev);
 
     if (!pythia.next()) continue;
     HepMC::GenEvent* hepmcevt = new HepMC::GenEvent();
     ToHepMC.fill_next_event( pythia, hepmcevt );
 
     //    std::cout<<"Nvtx = "<<hepmcevt->vertices_size()<<std::endl;
-    typedef std::map<HepMC::GenVertex*, GenVertexHandle > VertexMap;
+    typedef std::map<HepMC::GenVertex*, fcc::GenVertex > VertexMap;
     VertexMap vtx_map;
     for ( HepMC::GenEvent::vertex_iterator iv = hepmcevt->vertices_begin();
 	  iv != hepmcevt->vertices_end(); ++iv ) {
       //      (*iv)->print();
       // std::cout<<"hepmc vertex "<<(*iv)<<endl;
       const HepMC::FourVector& vpos = (*iv)->position();
-      GenVertexHandle vtx = vcoll.create();
+      fcc::GenVertex vtx = vcoll.create();
       // std::cout<<"vertex "<<vtx.index()<<"/"<<vtx.containerID()<<std::endl;
-      vtx.mod().Position.X = vpos.x();
-      vtx.mod().Position.Y = vpos.y();
-      vtx.mod().Position.Z = vpos.z();
-      vtx.mod().Ctau = vpos.t();
+      vtx.Position().X = vpos.x();
+      vtx.Position().Y = vpos.y();
+      vtx.Position().Z = vpos.z();
+      vtx.Ctau(vpos.t());
       vtx_map.emplace(*iv, vtx);
       // std::cout<<" in map "<<vtx_map[*iv].index()<<"/"<<vtx_map[*iv].containerID()<<std::endl;
     }
@@ -138,8 +131,8 @@ int main(){
     for ( HepMC::GenEvent::particle_iterator ip = hepmcevt->particles_begin();
 	  ip != hepmcevt->particles_end(); ++ip ) {
       HepMC::GenParticle* hepmcptc = *ip;
-      MCParticleHandle ptc = pcoll.create();
-      BareParticle& core = ptc.mod().Core;
+      fcc::MCParticle ptc = pcoll.create();
+      fcc::BareParticle& core = ptc.Core();
       core.Type = hepmcptc->pdg_id();
       core.Charge = pythia.particleData.charge(core.Type);
       core.Status = hepmcptc->status();
@@ -160,7 +153,7 @@ int main(){
       typedef VertexMap::const_iterator IVM;
       IVM prodvtx = vtx_map.find(hepmcptc->production_vertex());
       if(prodvtx!=vtx_map.end()) {
-	ptc.mod().StartVertex = prodvtx->second;
+	ptc.StartVertex(prodvtx->second);
 	// std::cout<<"prod vertex found "
 		 // <<hepmcptc->production_vertex()<<" "
 		 // <<prodvtx->first<<" "
@@ -172,7 +165,7 @@ int main(){
       }
       IVM endvtx = vtx_map.find(hepmcptc->end_vertex());
       if(endvtx!=vtx_map.end()) {
-	ptc.mod().EndVertex = endvtx->second;
+	ptc.EndVertex(endvtx->second);
       }
       else{
 	// std::cout<<"no end vertex found"<<std::endl;
@@ -185,8 +178,8 @@ int main(){
     // cout<<"jets:"<<endl;
     for(unsigned i=0; i<jets.size(); ++i) {
       // cout<<"\t"<<jets[i].pt()<<" "<<jets[i].eta()<<" "<<jets[i].phi()<<endl;
-      GenJetHandle genjet = genjetcoll.create();
-      BareJet& core = genjet.mod().Core;
+      fcc::GenJet genjet = genjetcoll.create();
+      fcc::BareJet& core = genjet.Core();
       core.P4.Px = jets[i].px();
       core.P4.Py = jets[i].py();
       core.P4.Pz = jets[i].pz();
@@ -194,7 +187,7 @@ int main(){
     }
 
     writer.writeEvent();
-    store.next();
+    store.clearCollections();
     delete hepmcevt;
   }
 
