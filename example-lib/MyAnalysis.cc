@@ -1,12 +1,12 @@
 #include "MyAnalysis.h"
 
-// albers specific includes
-#include "albers/EventStore.h"
-#include "albers/Reader.h"
-#include "albers/Registry.h"
+// podio specific includes
+#include "podio/EventStore.h"
+#include "podio/ROOTReader.h"
 
 #include "datamodel/JetCollection.h"
 #include "datamodel/JetParticleAssociationCollection.h"
+#include "datamodel/ParticleCollection.h"
 
 // Utility functions
 #include "utilities/JetUtils.h"
@@ -23,8 +23,8 @@ MyAnalysis::MyAnalysis() :
 void MyAnalysis::loop(const char* filename) {
   m_hjetenergy.Reset();
   m_hjetnparts.Reset();
-  albers::Reader reader;
-  albers::EventStore store(nullptr);
+  podio::ROOTReader reader;
+  podio::EventStore store;
   store.setReader(&reader);
   try {
     reader.openFile(filename);
@@ -43,45 +43,43 @@ void MyAnalysis::loop(const char* filename) {
     if(i>10)
       verbose = false;
     processEvent(store, verbose, reader);
-    store.endOfEvent();
+    store.clear();
     reader.endOfEvent();
   }
   return;
 }
 
 
-void MyAnalysis::processEvent(albers::EventStore& store, bool verbose,
-			      albers::Reader& reader) {
+void MyAnalysis::processEvent(podio::EventStore& store, bool verbose,
+                              podio::ROOTReader& reader) {
 
   // read jets
-  JetCollection* jrefs(nullptr);
+  const fcc::JetCollection* jrefs(nullptr);
   bool jets_available = store.get("GenJet",jrefs);
-  std::vector<ParticleHandle> injets;
+  std::vector<fcc::Particle> injets;
 
   if (jets_available){
-    JetParticleAssociationCollection* jprefs(nullptr);
+    const fcc::JetParticleAssociationCollection* jprefs(nullptr);
     bool assoc_available = store.get("GenJetParticle",jprefs);
     if(verbose) {
-      reader.getRegistry()->print();
+      reader.getCollectionIDTable()->print();
       std::cout << "jet collection:" << std::endl;
     }
     for(const auto& jet : *jrefs){
-      std::vector<ParticleHandle> jparticles = utils::associatedParticles(jet,
-									  *jprefs);
-      TLorentzVector lv = utils::lvFromPOD(jet.read().Core.P4);
+      std::vector<fcc::Particle> jparticles = utils::associatedParticles(jet,
+                                                                    *jprefs);
+      TLorentzVector lv = utils::lvFromPOD(jet.Core().P4);
       m_hjetenergy.Fill(lv.E());
       m_hjetnparts.Fill(jparticles.size());
       if(verbose)
-	std::cout << "\tjet: E=" << lv.E() << " "<<lv.Eta()<<" "<<lv.Phi()
-		  <<" npart="<<jparticles.size()<<std::endl;
+        std::cout << "\tjet: E=" << lv.E() << " "<<lv.Eta()<<" "<<lv.Phi()
+                  <<" npart="<<jparticles.size()<<std::endl;
       if(assoc_available) {
-	for(const auto& part : jparticles) {
-	  if(part.isAvailable()) {
-	    if(verbose)
-	      std::cout<<"\t\tassociated "<<part<<std::endl;
-	    injets.push_back(part);
-	  }
-	}
+        for(const auto& part : jparticles) {
+          if(verbose)
+            std::cout<<"\t\tassociated "<<part<<std::endl;
+          injets.push_back(part);
+        }
       }
     }
   }
