@@ -1,6 +1,6 @@
 from ROOT import gSystem
 gSystem.Load("libanalysiscpp-myanalysis")
-from ROOT import MyAnalysis, TCanvas
+from ROOT import MyAnalysis, TCanvas, gPad
 
 ma = MyAnalysis()
 ma.loop("example.root")
@@ -11,3 +11,4 @@ ma.m_hjetenergy.Draw()
 c1.cd(2)
 ma.m_hjetnparts.Draw()
 
+gPad.Update()

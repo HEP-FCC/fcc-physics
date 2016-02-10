@@ -23,9 +23,8 @@ MyAnalysis::MyAnalysis() :
 void MyAnalysis::loop(const char* filename) {
   m_hjetenergy.Reset();
   m_hjetnparts.Reset();
-  podio::ROOTReader reader;
-  podio::EventStore store;
-  store.setReader(&reader);
+  auto reader = podio::ROOTReader();
+  auto store = podio::EventStore();
   try {
     reader.openFile(filename);
   }
@@ -33,6 +32,8 @@ void MyAnalysis::loop(const char* filename) {
     std::cerr<<err.what()<<". Quitting."<<std::endl;
     exit(1);
   }
+  store.setReader(&reader);
+
   bool verbose = true;
 
   // unsigned nEvents = 5;
@@ -40,7 +41,7 @@ void MyAnalysis::loop(const char* filename) {
   for(unsigned i=0; i<nEvents; ++i) {
     if(i%1000==0)
       std::cout<<"reading event "<<i<<std::endl;
-    if(i>10)
+    if(i>2)
       verbose = false;
     processEvent(store, verbose, reader);
     store.clear();
@@ -57,7 +58,7 @@ void MyAnalysis::processEvent(podio::EventStore& store, bool verbose,
   const fcc::JetCollection* jrefs(nullptr);
   bool jets_available = store.get("GenJet",jrefs);
   std::vector<fcc::Particle> injets;
-
+  
   if (jets_available){
     const fcc::JetParticleAssociationCollection* jprefs(nullptr);
     bool assoc_available = store.get("GenJetParticle",jprefs);

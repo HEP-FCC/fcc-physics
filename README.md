@@ -8,11 +8,11 @@ example:
 
 example-lib:
 - shared library to be used from the ROOT command line.
-- ROOT macro based on this shared library
+- pyroot macro based on this shared library
 
 
 Prerequisite: before doing anything,
-- compile albers and source its init script to set your environment for albers.
+- compile podio and source its init script to set your environment for podio.
 - compile fcc-edm and source its init script to set your environment for fcc-edm
 
 Before compiling or using 
