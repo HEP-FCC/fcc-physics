@@ -12,7 +12,7 @@ ROOT_GENERATE_DICTIONARY(analysiscpp-MyAnalysisDict MyAnalysis.h LINKDEF LinkDef
 
 add_library(analysiscpp-myanalysis SHARED ${sources} ${headers} ${}analysiscpp-MyAnalysisDict.cxx)
 
-target_link_libraries(analysiscpp-myanalysis utilities datamodel podio ${ROOT_LIBRARIES} ${ROOT_COMPONENT_LIBRARIES})
+target_link_libraries(analysiscpp-myanalysis utilities datamodel datamodelDict podio ${ROOT_LIBRARIES} ${ROOT_COMPONENT_LIBRARIES})
 
 install(TARGETS analysiscpp-myanalysis DESTINATION lib)
 

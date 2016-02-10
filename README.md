@@ -8,24 +8,16 @@ example:
 
 example-lib:
 - shared library to be used from the ROOT command line.
-- ROOT macro based on this shared library
+- pyroot macro based on this shared library
 
 
 Prerequisite: before doing anything,
-- compile albers and source its init script to set your environment for albers.
+- compile podio and source its init script to set your environment for podio.
 - compile fcc-edm and source its init script to set your environment for fcc-edm
 
-Before compiling or using on lxplus:
+Before compiling or using 
 
     source ./init.sh
-
-Before compiling or using on mac os: 
-
-    source ./init_macos.sh
-
-Before compiling or using on mac os: 
-
-    source ./init_linux.sh
 
 Compilation:
 
@@ -43,7 +35,6 @@ Test of the executable
 Test of the shared library
 
     ${FCCEDM}/bin/fccedm-write
-    root example-lib/test_macro.C
-    
+    python -i example-lib/test_macro.py 
 
 
