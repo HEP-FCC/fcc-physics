@@ -27,7 +27,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -DDROP_CGAL ${CPP11FLAGS} -Wall -W
 
 # Make sure we find the Find*.cmake functions distributed with this package
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-set(CMAKE_PREFIX_PATH $ENV{ALBERS} $ENV{FCCEDM})
+set(CMAKE_PREFIX_PATH $ENV{PODIO} $ENV{FCCEDM})
 find_package(podio COMPONENTS podio REQUIRED)
 link_directories(${podio_LIBRARY_DIR})
 message(STATUS "Found PDIO: ${podio_DIR}")
@@ -52,5 +52,4 @@ include_directories(
 
 # Add sub-directories
 add_subdirectory(example)
-add_subdirectory(example-lib)
 
