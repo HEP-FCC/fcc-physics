@@ -15,8 +15,8 @@ class MyAnalysis {
   void loop(const char* filename);
   void processEvent(podio::EventStore& store, bool verbose,
 		    podio::ROOTReader& reader);
-  TH1F m_hjetenergy;
-  TH1F m_hjetnparts;
+  TH1F m_h_ptc_pdgid;
+ 
 };
 
 #endif

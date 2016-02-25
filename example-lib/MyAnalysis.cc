@@ -4,8 +4,7 @@
 #include "podio/EventStore.h"
 #include "podio/ROOTReader.h"
 
-#include "datamodel/JetCollection.h"
-#include "datamodel/JetParticleAssociationCollection.h"
+#include "datamodel/EventInfoCollection.h"
 #include "datamodel/ParticleCollection.h"
 
 // Utility functions
@@ -16,13 +15,11 @@
 #include "TLorentzVector.h"
 
 MyAnalysis::MyAnalysis() :
-  m_hjetenergy("hjetenergy","hjetenergy", 500, 0, 500),
-  m_hjetnparts("hjetnparts","hjetnparts", 50, 0, 50) {}
+  m_h_ptc_pdgid("h_ptc_pdgid","particle pdgid", 500, -250, 250) {}
 
 
 void MyAnalysis::loop(const char* filename) {
-  m_hjetenergy.Reset();
-  m_hjetnparts.Reset();
+  m_h_ptc_pdgid.Reset();
   auto reader = podio::ROOTReader();
   auto store = podio::EventStore();
   try {
@@ -50,38 +47,29 @@ void MyAnalysis::loop(const char* filename) {
   return;
 }
 
-
 void MyAnalysis::processEvent(podio::EventStore& store, bool verbose,
-                              podio::ROOTReader& reader) {
+                  podio::ROOTReader& reader) {
 
-  // read jets
-  const fcc::JetCollection* jrefs(nullptr);
-  bool jets_available = store.get("GenJet",jrefs);
-  std::vector<fcc::Particle> injets;
-  
-  if (jets_available){
-    const fcc::JetParticleAssociationCollection* jprefs(nullptr);
-    bool assoc_available = store.get("GenJetParticle",jprefs);
-    if(verbose) {
-      reader.getCollectionIDTable()->print();
-      std::cout << "jet collection:" << std::endl;
-    }
-    for(const auto& jet : *jrefs){
-      std::vector<fcc::Particle> jparticles = utils::associatedParticles(jet,
-                                                                    *jprefs);
-      TLorentzVector lv = utils::lvFromPOD(jet.Core().P4);
-      m_hjetenergy.Fill(lv.E());
-      m_hjetnparts.Fill(jparticles.size());
+  // read event information
+  const fcc::EventInfoCollection* evinfocoll(nullptr);
+  bool evinfo_available = store.get("EventInfo", evinfocoll);
+  if(evinfo_available) {
+    auto evinfo = evinfocoll->at(0);
+
+    if(verbose)
+      std::cout << "event number " << evinfo.Number() << std::endl;
+  }
+
+  // read particles
+  const fcc::ParticleCollection* ptcs(nullptr);
+  bool particles_available = store.get("GenParticle", ptcs);
+  if (particles_available){
+    if(verbose)
+      std::cout << "particle collection:" << std::endl;
+    for(const auto& ptc : *ptcs){
       if(verbose)
-        std::cout << "\tjet: E=" << lv.E() << " "<<lv.Eta()<<" "<<lv.Phi()
-                  <<" npart="<<jparticles.size()<<std::endl;
-      if(assoc_available) {
-        for(const auto& part : jparticles) {
-          if(verbose)
-            std::cout<<"\t\tassociated "<<part<<std::endl;
-          injets.push_back(part);
-        }
-      }
+        std::cout<<"\t"<<ptc<<std::endl;
+      m_h_ptc_pdgid.Fill(ptc.Core().Type);
     }
   }
 }
