@@ -63,3 +63,4 @@ include_directories(
 add_subdirectory(example)
 add_subdirectory(example-lib)
 add_subdirectory(tools)
+add_subdirectory(pythia8)

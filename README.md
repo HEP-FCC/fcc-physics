@@ -1,12 +1,10 @@
 fcc-physics
 ===========
 
-## Overview
-
 This package contains:
 
 - various standalone C++ physics tools that you can use in your analysis, both on lxplus and your laptop
-  - [pythiafcc](generators/pythiafcc.cc): a pythia8 executable producing events in the FCC EDM format
+  - [pythiafcc](pythia8/generate.cc): a pythia8 executable producing events in the FCC EDM format
   - [JetClusterizer](tools/JetClusterizer.h): a fastjet interface usable in C++ and python analysis scripts to recluster jets 
 - example code showing how to read and process FCC EDM events in C++:
   - [read.cc](example/read.cc): in an executable
@@ -48,11 +46,11 @@ For example, assuming you have installed these three packages in `$HOME/local`, 
 
 ## Installing the fcc-physics package
 
-Set up your environment
+Before installing and everytime you want to use this software, set up your environment
 
     source ./init.sh
 
-Compilation:
+Compile:
 
     mkdir build
     cd build
@@ -60,19 +58,32 @@ Compilation:
     make -j 4 install
     cd ..
 
-Creation of an example FCC EDM root file **COLIN MAKE SURE FCCEDM IS DEFINED, AND REPLACE WITH make test**
+Test: 
+	
+	cd build
+	make test
+
+## Generating events with pythiafcc
+
+Example pythia8 configuration cards are available in the
+
+## Writing your own C++ analysis code
+
+No documentation yet, but you can already run the examples, 
+and learn by looking at the code.
+
+Create an example FCC EDM root file: 
 
     ${FCCEDM}/bin/fccedm-write
-
-Test of the executable:
-
-    ${FCCEDM}/bin/fccedm-write
+    
+Read this file with an analysis executable:
+    
     ./install/bin/analysiscpp-read    
 
-Test of the shared library:
+Read this file with a python ROOT macro making use of an analysis class compiled in a shared library:
 
     python -i example-lib/test_macro.py 
 
-## Using pythiafcc
+## Generating events with pythiafcc
 
 **COLIN add instructions for pythiafcc**
