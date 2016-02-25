@@ -60,14 +60,19 @@ Compilation:
     make -j 4 install
     cd ..
 
-Test of the executable **COLIN MAKE SURE FCCEDM IS DEFINED, AND REPLACE WITH make test**
+Creation of an example FCC EDM root file **COLIN MAKE SURE FCCEDM IS DEFINED, AND REPLACE WITH make test**
+
+    ${FCCEDM}/bin/fccedm-write
+
+Test of the executable:
 
     ${FCCEDM}/bin/fccedm-write
     ./install/bin/analysiscpp-read    
 
-Test of the shared library
+Test of the shared library:
 
-    ${FCCEDM}/bin/fccedm-write
     python -i example-lib/test_macro.py 
+
+## Using pythiafcc
 
 **COLIN add instructions for pythiafcc**
