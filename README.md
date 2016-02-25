@@ -48,7 +48,7 @@ For example, assuming you have installed these three packages in `$HOME/local`, 
 
 ## Installing the fcc-physics package
 
-Before compiling or using 
+Set up your environment
 
     source ./init.sh
 
@@ -70,4 +70,4 @@ Test of the shared library
     ${FCCEDM}/bin/fccedm-write
     python -i example-lib/test_macro.py 
 
-
+**COLIN add instructions for pythiafcc**
