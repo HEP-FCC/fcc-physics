@@ -65,25 +65,57 @@ Test:
 
 ## Generating events with pythiafcc
 
-Example pythia8 configuration cards are available in the
+Example pythia8 configuration cards are available in the [pythia8]
+(pythia8) directory. 
+
+To generate e+e to ZH with Z to mumu and H to b bbar at 240 GeV, do:
+
+    fcc-pythia8-generate pythia8/ZH_Zmumu_Hbb.txt 
+   
+The events are stored in the FCC EDM format in `example.root`
+
+Open this file with root to see which collections of objects have been stored: 
+
+    root example.root
+    events->Print()
+    
+You should get a printout like: 
+
+	******************************************************************************
+	*Tree    :events    : Events tree                                            *
+	*Entries :    10000 : Total =        38573156 bytes  File  Size =   10281281 *
+	*        :          : Tree compression factor =   3.75                       *
+	******************************************************************************
+	*Br    0 :GenParticle : Int_t GenParticle_                                   *
+	*Entries :    10000 : Total  Size=     106318 bytes  File Size  =      26175 *
+	*Baskets :        4 : Basket Size=      32000 bytes  Compression=   3.07     *
+	*............................................................................*
+	*Br    1 :GenParticle.Core.Status : UInt_t Status[GenParticle_]              *
+	*Entries :    10000 : Total  Size=    2893248 bytes  File Size  =      56959 *
+	*Baskets :       92 : Basket Size=      32000 bytes  Compression=  50.76     *
+	*............................................................................*
+	*Br    2 :GenParticle.Core.Charge : Int_t Charge[GenParticle_]               *
+	*Entries :    10000 : Total  Size=    2893248 bytes  File Size  =      56959 *
+	*Baskets :       92 : Basket Size=      32000 bytes  Compression=  50.76     *
+	*............................................................................*
+
+Now plot the charge of the stable generated particles: 
+
+    events->Draw("GenParticle.Core.Charge", "GenParticle.Core.Status==1")
+    
 
 ## Writing your own C++ analysis code
 
 No documentation yet, but you can already run the examples, 
 and learn by looking at the code.
-
-Create an example FCC EDM root file: 
-
-    ${FCCEDM}/bin/fccedm-write
     
-Read this file with an analysis executable:
+Read the file produced earlier with pythia8, using an analysis executable:
     
-    ./install/bin/analysiscpp-read    
+    ./install/bin/fcc-physics-read    
 
 Read this file with a python ROOT macro making use of an analysis class compiled in a shared library:
 
     python -i example-lib/test_macro.py 
 
-## Generating events with pythiafcc
 
-**COLIN add instructions for pythiafcc**
+    

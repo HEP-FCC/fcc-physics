@@ -36,48 +36,6 @@ void processEvent(podio::EventStore& store, bool verbose,
       std::cout << "event number " << evinfo.Number() << std::endl;
   }
 
-  // the following is commented out to test on-demand reading through Jet-Particle association,
-  // see below
-  // // read particles
-  // ParticleCollection* ptcs(nullptr);
-  // bool particles_available = store.get("GenParticle",ptcs);
-  // if (particles_available){
-  //   for(const auto& part : *ptcs) {
-  //     std::cout<<part.containerID()<<" "<<part.index()<<std::endl;
-  //   }
-  // }
-
-  // read jets
-  const fcc::JetCollection* jrefs(nullptr);
-  bool jets_available = store.get("GenJet",jrefs);
-  std::vector<fcc::Particle> injets;
-
-  if (jets_available){
-    const fcc::JetParticleAssociationCollection* jprefs(nullptr);
-    bool assoc_available = store.get("GenJetParticle",jprefs);
-    if(verbose) {
-      reader.getCollectionIDTable()->print();
-      std::cout << "jet collection:" << std::endl;
-    }
-    for(const auto& jet : *jrefs){
-      std::vector<fcc::Particle> jparticles = utils::associatedParticles(jet,
-                                                                          *jprefs);
-      TLorentzVector lv = utils::lvFromPOD(jet.Core().P4);
-      if(verbose)
-        std::cout << "\tjet: E=" << lv.E() << " "<<lv.Eta()<<" "<<lv.Phi()
-                  <<" npart="<<jparticles.size()<<std::endl;
-      if(assoc_available) {
-        for(const auto& part : jparticles) {
-          if(part.isAvailable()) {
-            if(verbose)
-              std::cout<<"\t\tassociated "<<part<<std::endl;
-            injets.push_back(part);
-          }
-        }
-      }
-    }
-  }
-
   // read particles
   const fcc::ParticleCollection* ptcs(nullptr);
   bool particles_available = store.get("GenParticle", ptcs);
@@ -94,31 +52,8 @@ void processEvent(podio::EventStore& store, bool verbose,
         muons.push_back(ptc);
       }
     }
-    // listing particles that are not used in a jet
-    std::vector<fcc::Particle> unused = utils::unused(*ptcs, injets);
-    if(verbose)
-      std::cout<<"unused particles: "<<unused.size()<<"/"<<ptcs->size()<<" "<<injets.size()<<std::endl;
-
-    // computing isolation for first muon
-    if(not muons.empty()) {
-      const auto& muon = muons[0];
-      float dRMax = 0.5;
-      const std::vector<fcc::Particle> incone = utils::inCone( muon.Core().P4,
-                                                          *ptcs,
-                                                          dRMax);
-      float sumpt = utils::sumPt(incone);
-      if( verbose ) {
-        std::cout<<"muon: "<<muon<<" sumpt "<<sumpt<<std::endl;
-        std::cout<<"\tparticles in cone:"<<std::endl;
-      }
-      for(const auto& ptc : incone) {
-        if( verbose )
-          std::cout<<"\t"<<ptc<<std::endl;
-      }
-    }
   }
 }
-
 
 int main(){
   auto reader = podio::ROOTReader();

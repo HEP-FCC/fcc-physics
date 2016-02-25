@@ -72,12 +72,8 @@ int main(int argc, char** argv) {
   std::vector<fastjet::PseudoJet> input_particles;
 
   for(unsigned iev=0; iev<nevents; ++iev) {
-    // fill event information
-    // here, asking the store for the collection.
-    // could also just reuse the reference obtained at the time of the creation
-    // of the collection
-    auto& evinfocoll = store.create<fcc::EventInfoCollection> ("EventInfo");
-    fcc::EventInfo evinfo = evinfocoll.create();
+
+    auto evinfo = evinfocoll.create();
     evinfo.Number(iev);
 
     if (!pythia.next()) continue;
