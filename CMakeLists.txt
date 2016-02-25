@@ -44,6 +44,9 @@ message(STATUS "Found fcc-edm: ${fccedm_DIR}")
 # find_library(FCCEDMLIB datamodel HINTS ${fccedm_LIBRARIES})
 # message("FCCEDM ${FCCEDMLIB}")
 
+# enable testing infrastructure
+include(CTest)
+
 find_package(ROOT REQUIRED)
 find_package(HepMC)
 find_package(Pythia8 REQUIRED)
