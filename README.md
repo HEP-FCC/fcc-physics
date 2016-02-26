@@ -12,11 +12,7 @@ This package contains:
 
 ## Installing required software 
 
-### On lxplus
-
-All the necessary software has been preinstalled for you. Just make sure that you have installed [FCCSW](https://github.com/HEP-FCC/FCCSW.git) and set up your environment to use it by sourcing its [init.sh](https://github.com/HEP-FCC/podio/blob/master/init.sh) script, and skip to the next section
-
-### On other systems
+**If you're working on lxplus, all the necessary software has been preinstalled for you and you can just proceed with [installing the fcc-physics package](#install_fcc).**
 
 The other supported operating systems are ubuntu 14, macos X, and slc6 (other than lxplus nodes). 
 
@@ -44,7 +40,7 @@ For example, assuming you have installed these three packages in `$HOME/local`, 
     
 
 
-## Installing the fcc-physics package
+## <a name="install_fcc"></a>Installing the fcc-physics package
 
 Before installing and everytime you want to use this software, set up your environment
 
