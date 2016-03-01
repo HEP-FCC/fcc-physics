@@ -30,3 +30,4 @@ fi
 echo platform detected: $platform
 export PATH=$FCCPHYSICS/bin:$FASTJET_ROOT_DIR/bin:$PATH
 export PYTHIA8DATA=${PYTHIA8_DIR}/share/Pythia8/xmldoc
+export PYTHONPATH=$PODIO/python:$PYTHONPATH
