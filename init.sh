@@ -3,7 +3,10 @@ platform='unknown'
 sw_afs=0
 unamestr=`uname`
 
-export FCCPHYSICS=$PWD/install
+if [ -z ${FCCPHYSICS+x} ]; then 
+    export FCCPHYSICS=$PWD/install
+    echo "FCCPHYSICS is unset, setting to $FCCPHYSICS";
+fi
 
 if [[ "$unamestr" == 'Linux' ]]; then
     platform='Linux'
