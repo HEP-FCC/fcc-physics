@@ -17,8 +17,8 @@ if [[ "$unamestr" == 'Linux' ]]; then
 	sw_afs=1
         source $LCGPATH/setup.sh
         if [ -z "$PODIO" ]; then
-            export PODIO=/afs/cern.ch/exp/fcc/sw/0.7/podio/snapshot/x86_64-slc6-gcc49-opt/
-            export FCCEDM=/afs/cern.ch/exp/fcc/sw/0.7/fcc-edm/snapshot/x86_64-slc6-gcc49-opt/
+            export PODIO=/afs/cern.ch/exp/fcc/sw/0.7/podio/0.3/x86_64-slc6-gcc49-opt/
+            export FCCEDM=/afs/cern.ch/exp/fcc/sw/0.7/fcc-edm/0.3/x86_64-slc6-gcc49-opt/
         fi
 	export PYTHIA8_DIR=/afs/cern.ch/exp/fcc/sw/0.6/LCG_80/MCGenerators/pythia8/212/x86_64-slc6-gcc49-opt
 	export HEPMC_PREFIX=$LCGPATH
