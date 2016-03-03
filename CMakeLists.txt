@@ -39,10 +39,13 @@ if (NOT PODIOLIB)
 endif()
 link_directories(${podio_LIBRARY_DIR})
 
-find_package(fccedm REQUIRED)
+find_package(fccedm REQUIRED HINTS $ENV{FCCEDM})
 message(STATUS "Found fcc-edm: ${fccedm_DIR}")
 # find_library(FCCEDMLIB datamodel HINTS ${fccedm_LIBRARIES})
 # message("FCCEDM ${FCCEDMLIB}")
+
+# enable testing infrastructure
+include(CTest)
 
 find_package(ROOT REQUIRED)
 find_package(HepMC)

@@ -3,8 +3,11 @@ platform='unknown'
 sw_afs=0
 unamestr=`uname`
 
-export FCCPHYSICS=$PWD/install
 export LCGPATH=/afs/cern.ch/sw/lcg/views/LCG_83/x86_64-slc6-gcc49-opt
+if [ -z ${FCCPHYSICS+x} ]; then 
+    export FCCPHYSICS=$PWD/install
+    echo "FCCPHYSICS is unset, setting to $FCCPHYSICS";
+fi
 
 if [[ "$unamestr" == 'Linux' ]]; then
     platform='Linux'
