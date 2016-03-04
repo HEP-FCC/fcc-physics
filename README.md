@@ -66,7 +66,7 @@ Example pythia8 configuration cards are available in the [pythia8]
 
 To generate e+e to ZH with Z to mumu and H to b bbar at 240 GeV, do:
 
-    fcc-pythia8-generate pythia8/card_ee_ZH_Zmumu_Hbb.txt
+    fcc-pythia8-generate pythia8/ee_ZH_Zmumu_Hbb.txt
    
 The events are stored in the FCC EDM format in `example.root`
 
