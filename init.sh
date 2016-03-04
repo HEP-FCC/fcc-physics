@@ -31,6 +31,7 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
     export DYLD_LIBRARY_PATH=$FCCPHYSICS/lib:$HEPMC_PREFIX/lib:$FASTJET_ROOT_DIR/lib:$PYTHIA8_DIR/lib:$DYLD_LIBRARY_PATH
 fi
 echo platform detected: $platform
+export ROOT_INCLUDE_PATH=$ROOT_INCLUDE_PATH:$FCCEDM/include/datamodel
 export PATH=$FCCPHYSICS/bin:$FASTJET_ROOT_DIR/bin:$PATH
 export PYTHIA8DATA=${PYTHIA8_DIR}/share/Pythia8/xmldoc
 export PYTHONPATH=$PODIO/python:$PYTHONPATH
