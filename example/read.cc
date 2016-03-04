@@ -55,11 +55,16 @@ void processEvent(podio::EventStore& store, bool verbose,
   }
 }
 
-int main(){
+int main(int argc, char** argv){
   auto reader = podio::ROOTReader();
   auto store = podio::EventStore();
+  if( argc != 2) {
+    std::cerr<<"Usage: pythiafcc-read filename"<<std::endl;
+    return 1;
+  }
+  const char* fname = argv[1];
   try {
-    reader.openFile("example.root");
+    reader.openFile(fname);
   }
   catch(std::runtime_error& err) {
     std::cerr<<err.what()<<". Quitting."<<std::endl;
