@@ -11,28 +11,29 @@
 set(_pythia8dirs ${PYTHIA8_DIR} $ENV{PYTHIA8_DIR} /usr /opt/pythia8)
 
 find_path(PYTHIA8_INCLUDE_DIR
-          NAMES Pythia.h Pythia8/Pythia.h
+          NAMES Pythia8/Pythia.h
           HINTS ${_pythia8dirs}
           PATH_SUFFIXES include
           DOC "Specify the directory containing Pythia.h.")
 
 find_library(PYTHIA8_LIBRARY
              NAMES pythia8 Pythia8
-             HINTS ${_pythia8dirs}
+             HINTS "${PYTHIA8_INCLUDE_DIR}/../lib"
+             NO_DEFAULT_PATH
              PATH_SUFFIXES lib
              DOC "Specify the Pythia8 library here.")
 
 find_library(PYTHIA8_hepmcinterface_LIBRARY
              NAMES hepmcinterface pythia8tohepmc
-             HINTS ${_pythia8dirs}
+             HINTS ${PYTHIA8_INCLUDE_DIR}/.. ${_pythia8dirs}
              PATH_SUFFIXES lib)
 
 find_library(PYTHIA8_lhapdfdummy_LIBRARY
              NAMES lhapdfdummy
-             HINTS ${_pythia8dirs}
+             HINTS ${PYTHIA8_INCLUDE_DIR}/.. ${_pythia8dirs}
              PATH_SUFFIXES lib)
 
-foreach(_lib PYTHIA8_LIBRARY PYTHIA8_hepmcinterface_LIBRARY PYTHIA8_lhapdfdummy_LIBRARY)
+foreach(_lib PYTHIA8_LIBRARY )
   if(${_lib})
     set(PYTHIA8_LIBRARIES ${PYTHIA8_LIBRARIES} ${${_lib}})
   endif()
@@ -44,4 +45,4 @@ set(PYTHIA8_INCLUDE_DIRS ${PYTHIA8_INCLUDE_DIR} ${PYTHIA8_INCLUDE_DIR}/Pythia8 )
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Pythia8 DEFAULT_MSG PYTHIA8_INCLUDE_DIR PYTHIA8_LIBRARY)
-mark_as_advanced(PYTHIA8_INCLUDE_DIR PYTHIA8_LIBRARY PYTHIA8_hepmcinterface_LIBRARY PYTHIA8_lhapdfdummy_LIBRARY)
+mark_as_advanced(PYTHIA8_INCLUDE_DIR PYTHIA8_LIBRARY)
