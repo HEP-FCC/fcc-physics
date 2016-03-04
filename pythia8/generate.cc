@@ -32,12 +32,24 @@ int main(int argc, char** argv) {
     std::cerr<<"Usage: pythiafcc-generate <pythia card file>"<<std::endl;
     return 1;
   }
-  const char* card_file = argv[1]; 
-  
+  const char* card_file = argv[1];
+  std::string output(card_file);
+  size_t dot = output.find_last_of(".");
+  if(dot != std::string::npos){
+    output.replace(dot, output.size()-dot, ".root");
+  }
+  else {
+    output += ".root";
+  }
+  size_t slash = output.find_last_of("/");
+  if(slash != std::string::npos){
+    output.replace(0, slash+1, "");
+  }
   std::cout<<"start processing"<<std::endl;
+  std::cout<<"output file: "<<output<<std::endl;
 
   auto store  = podio::EventStore();
-  auto writer = podio::ROOTWriter("example.root", &store);
+  auto writer = podio::ROOTWriter(output, &store);
 
 
   fcc::EventInfoCollection& evinfocoll = store.create<fcc::EventInfoCollection>("EventInfo");
