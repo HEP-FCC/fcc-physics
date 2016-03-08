@@ -8,18 +8,18 @@ file(GLOB headers *.h)
 # Pay attention to the name of the dictionary...
 # you want a unique name, not to pick up another .o file,
 # e.g. the one of fcc-edm
-ROOT_GENERATE_DICTIONARY(analysiscpp-MyAnalysisDict MyAnalysis.h LINKDEF LinkDef.h )
+REFLEX_GENERATE_DICTIONARY(fccphysics-MyAnalysisDict ${headers} SELECTION selection.xml )
 
-add_library(analysiscpp-myanalysis SHARED ${sources} ${headers} ${}analysiscpp-MyAnalysisDict.cxx)
+add_library(fccphysics-myanalysis SHARED ${sources} ${headers} fccphysics-MyAnalysisDict.cpp)
 
-target_link_libraries(analysiscpp-myanalysis utilities datamodel datamodelDict podio ${ROOT_LIBRARIES} ${ROOT_COMPONENT_LIBRARIES})
+target_link_libraries(fccphysics-myanalysis utilities datamodel datamodelDict podio ${ROOT_LIBRARIES} ${ROOT_COMPONENT_LIBRARIES})
 
-install(TARGETS analysiscpp-myanalysis DESTINATION lib)
+install(TARGETS fccphysics-myanalysis DESTINATION lib)
 
 # Install the dictionary
 if (${ROOT_VERSION} GREATER 6)
   install(FILES
-      "${PROJECT_BINARY_DIR}/example-lib/analysiscpp-MyAnalysisDict_rdict.pcm"
+      "${PROJECT_BINARY_DIR}/example-lib/fccphysics-MyAnalysisDict_rdict.pcm"
       DESTINATION lib COMPONENT dev)
 endif()
 
