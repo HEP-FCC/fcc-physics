@@ -9,6 +9,13 @@ endif()
 
 install(TARGETS fcc-pythia8-generate DESTINATION bin)
 
+file(GLOB cards *.txt)
+list(REMOVE_ITEM cards "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt")
+
+install(FILES
+  ${cards}
+  DESTINATION share COMPONENT dev)
+
 add_test(NAME generate-ee-ttbar
         COMMAND fcc-pythia8-generate ${CMAKE_CURRENT_SOURCE_DIR}/ee_ttbar.txt
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
