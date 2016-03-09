@@ -90,6 +90,7 @@ int main(int argc, char** argv) {
 
     if (!pythia.next()) continue;
     HepMC::GenEvent* hepmcevt = new HepMC::GenEvent();
+    hepmcevt->use_units(HepMC::Units::GEV, HepMC::Units::MM);
     ToHepMC.fill_next_event( pythia, hepmcevt );
 
     //    std::cout<<"Nvtx = "<<hepmcevt->vertices_size()<<std::endl;
