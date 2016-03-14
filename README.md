@@ -72,7 +72,7 @@ The events are stored in the FCC EDM format in `example.root`
 
 Open this file with root to see which collections of objects have been stored: 
 
-    root example.root
+    root ee_ZH_Zmumu_Hbb.root
     events->Print()
     
 You should get a printout like: 
@@ -107,7 +107,7 @@ and learn by looking at the code.
     
 Read the file produced earlier with pythia8, using an analysis executable:
     
-    ./install/bin/fcc-physics-read    
+    ./install/bin/fcc-physics-read ee_ZH_Zmumu_Hbb.root 
 
 Read this file with a python ROOT macro making use of an analysis class compiled in a shared library:
 
