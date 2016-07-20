@@ -5,8 +5,9 @@
 ! The settings here are illustrative, not always physics-motivated.
 
 ! 1) Settings used in the main program.
-Main:numberOfEvents = 200         ! number of events to generate
-Main:timesAllowErrors = 3          ! how many aborts before run stops
+Random:setSeed = on
+Main:numberOfEvents = 2000         ! number of events to generate
+Main:timesAllowErrors = 5          ! how many aborts before run stops
 
 ! 2) Settings related to output in init(), next() and stat().
 Init:showChangedSettings = on      ! list changed settings
@@ -20,9 +21,8 @@ Next:numberShowEvent = 0           ! print event record n times
 Beams:idA = 2212                   ! first beam, p = 2212, pbar = -2212
 Beams:idB = 2212                   ! second beam, p = 2212, pbar = -2212
 
+! 4) Hard process : ttbar pair production at 100TeV
+Beams:eCM = 100000.  ! CM energy of collision
 
-! 4) Hard process : ZH, Z->mumu, H->bb, at 240 GeV
-
-Beams:eCM = 100000.                 ! CM energy of collision
-
-Top:All = on
+Top:gg2ttbar = on
+Top:qqbar2ttbar = on
