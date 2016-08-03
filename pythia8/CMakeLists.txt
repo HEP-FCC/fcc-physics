@@ -1,3 +1,4 @@
+include_directories(${CMAKE_SOURCE_DIR})
 
 add_executable(fcc-pythia8-generate generate.cc)
 
