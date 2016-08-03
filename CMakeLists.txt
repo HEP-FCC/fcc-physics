@@ -48,7 +48,7 @@ message(STATUS "Found fcc-edm: ${fccedm_DIR}")
 include(CTest)
 
 find_package(ROOT REQUIRED)
-find_package(HepMC)
+find_package(HepMC REQUIRED)
 find_package(Pythia8 REQUIRED)
 find_package(Fastjet)
 
@@ -61,6 +61,7 @@ include_directories(
   "${HEPMC_INCLUDE}"
   "${fastjet_INCLUDE_DIR}"
   )
+link_directories(${HEPMC_LIBRARY_DIR})
 
 # Add sub-directories
 add_subdirectory(example)

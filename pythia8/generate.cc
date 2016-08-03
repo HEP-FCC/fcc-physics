@@ -24,6 +24,8 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 
+#include "tools/TranslateHepMC.h"
+
 using namespace std;
 
 int main(int argc, char** argv) {
@@ -94,52 +96,7 @@ int main(int argc, char** argv) {
     ToHepMC.fill_next_event( pythia, hepmcevt );
 
     //    std::cout<<"Nvtx = "<<hepmcevt->vertices_size()<<std::endl;
-    typedef std::map<HepMC::GenVertex*, fcc::GenVertex > VertexMap;
-    VertexMap vtx_map;
-    for ( HepMC::GenEvent::vertex_iterator iv = hepmcevt->vertices_begin();
-	  iv != hepmcevt->vertices_end(); ++iv ) {
-      const HepMC::FourVector& vpos = (*iv)->position();
-      fcc::GenVertex vtx = vcoll.create();
-      vtx.Position().X = vpos.x();
-      vtx.Position().Y = vpos.y();
-      vtx.Position().Z = vpos.z();
-      vtx.Ctau(vpos.t());
-      vtx_map.emplace(*iv, vtx);
-    }
-    input_particles.clear();
-    for ( HepMC::GenEvent::particle_iterator ip = hepmcevt->particles_begin();
-	  ip != hepmcevt->particles_end(); ++ip ) {
-      HepMC::GenParticle* hepmcptc = *ip;
-      fcc::MCParticle ptc = pcoll.create();
-      fcc::BareParticle& core = ptc.Core();
-      core.Type = hepmcptc->pdg_id();
-      core.Charge = pythia.particleData.charge(core.Type);
-      core.Status = hepmcptc->status();
-      core.P4.Px = hepmcptc->momentum().px();
-      core.P4.Py = hepmcptc->momentum().py();
-      core.P4.Pz = hepmcptc->momentum().pz();
-      core.P4.Mass = hepmcptc->momentum().m();
-
-      if(core.Status==1) {
-	input_particles.push_back( fastjet::PseudoJet(hepmcptc->momentum().px(),
-						      hepmcptc->momentum().py(),
-						      hepmcptc->momentum().pz(),
-						      hepmcptc->momentum().e() ));
-      }
-      std::vector<fastjet::PseudoJet> input_particles;
-
-      typedef VertexMap::const_iterator IVM;
-      IVM prodvtx = vtx_map.find(hepmcptc->production_vertex());
-      if(prodvtx!=vtx_map.end()) {
-	ptc.StartVertex(prodvtx->second);
-      }
-
-      IVM endvtx = vtx_map.find(hepmcptc->end_vertex());
-      if(endvtx!=vtx_map.end()) {
-	ptc.EndVertex(endvtx->second);
-      }
-
-    }
+    translateEvent(hepmcevt, pcoll, vcoll);
     fastjet::ClusterSequence clust_seq(input_particles, jet_def);
     double ptmin = 10;
     std::vector<fastjet::PseudoJet> jets = clust_seq.inclusive_jets(ptmin);
