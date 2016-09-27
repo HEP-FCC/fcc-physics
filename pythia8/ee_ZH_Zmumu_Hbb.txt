@@ -27,6 +27,6 @@ Beams:eCM = 240.                 ! CM energy of collision
 
 HiggsSM:ffbar2HZ = on
 23:onMode = off
-23:onIfMatch = 13 13
+23:onIfMatch = 11 11
 25:onMode = off
 25:onIfMatch = 5 5

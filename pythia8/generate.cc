@@ -156,7 +156,7 @@ int main(int argc, char** argv) {
     store.clearCollections();
     delete hepmcevt;
   }
-
+  pythia.stat();
   writer.finish();
 
   return 0;
