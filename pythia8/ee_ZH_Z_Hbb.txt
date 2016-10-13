@@ -26,7 +26,5 @@ Beams:idB = -11                   ! second beam, p = 2212, pbar = -2212
 Beams:eCM = 240.                 ! CM energy of collision
 
 HiggsSM:ffbar2HZ = on
-23:onMode = off
-23:onIfMatch = 13 13
 25:onMode = off
 25:onIfMatch = 5 5
