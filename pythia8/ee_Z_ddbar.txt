@@ -5,7 +5,7 @@
 ! The settings here are illustrative, not always physics-motivated.
 
 ! 1) Settings used in the main program.
-Main:numberOfEvents = 1000         ! number of events to generate
+Main:numberOfEvents = 10           ! number of events to generate
 Main:timesAllowErrors = 3          ! how many aborts before run stops
 
 ! 2) Settings related to output in init(), next() and stat().
@@ -14,7 +14,10 @@ Init:showChangedParticleData = off ! list changed particle data
 Next:numberCount = 100             ! print message every n events
 Next:numberShowInfo = 1            ! print event information n times
 Next:numberShowProcess = 1         ! print process record n times
-Next:numberShowEvent = 0           ! print event record n times
+Next:numberShowEvent = 1           ! print event record n times
+
+Random:setSeed = on 
+Random:seed = 0
 
 ! 3) Beam parameter settings. Values below agree with default ones.
 Beams:idA = 11                   ! first beam, p = 2212, pbar = -2212
@@ -29,4 +32,6 @@ WeakSingleBoson:ffbar2ffbar(s:gmZ) = on
 WeakZ0:gmZmode = 2
 23:onMode = off
 23:onIfMatch = 1 1
+
+
 
