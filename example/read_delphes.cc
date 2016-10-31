@@ -1,10 +1,8 @@
 #include "datamodel/ParticleCollection.h"
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/JetCollection.h"
-#include "datamodel/JetParticleAssociationCollection.h"
 
 // Utility functions
-#include "utilities/JetUtils.h"
 #include "utilities/VectorUtils.h"
 #include "utilities/ParticleUtils.h"
 
@@ -29,19 +27,19 @@ void processEvent(podio::EventStore& store, bool verbose,
   // read event information
   const fcc::EventInfoCollection* evinfocoll(nullptr);
   bool evinfo_available = store.get("EventInfo", evinfocoll);
-  if(evinfo_available) {
+  if (evinfo_available) {
     auto evinfo = evinfocoll->at(0);
-
-    if(verbose)
-      std::cout << "event number " << evinfo.Number() << std::endl;
+    if (verbose) {
+      std::cout << "event number " << evinfo.number() << std::endl;
+    }
   }
 
-  // // read particles
+  // read particles
   const fcc::ParticleCollection* ptcs(nullptr);
   bool particles_available = store.get("genParticles",ptcs);
   if (particles_available){
     for(const auto& part : *ptcs) {
-      std::cout<<part.Core().P4.Px<<std::endl;
+      std::cout << part.p4().px << std::endl;
     }
   }
 
@@ -55,7 +53,7 @@ int main(){
     reader.openFile("example.root");
   }
   catch(std::runtime_error& err) {
-    std::cerr<<err.what()<<". Quitting."<<std::endl;
+    std::cerr << err.what() << ". Quitting." << std::endl;
     exit(1);
   }
   store.setReader(&reader);
@@ -66,7 +64,7 @@ int main(){
   unsigned nEvents = reader.getEntries();
   for(unsigned i=0; i<nEvents; ++i) {
     if(i%1000==0) {
-      std::cout<<"reading event "<<i<<std::endl;
+      std::cout << "reading event " << i << std::endl;
     }
     if(i>10) {
       verbose = false;
