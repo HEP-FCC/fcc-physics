@@ -47,10 +47,10 @@ python createMatchingPlots.py fccOutput.root
 The script will produce a bunch of canvas containing the differential jet rates. 
 A few guidelines for understanding whether the matching procedure has been done correctly:
 
-   - the matched cross section (for X=0,1,2.. ) is close to the unmatched cross-section for the 0-jets sample
+   - the matched cross section (for X=0,1,2.. ) should be close to the unmatched cross-section for the 0-jets sample
    - the matching scale qCut (in MLM matching) should be Q/6 < qCut < Q/3, where Q is the characteristic hard scale of
    the process
    - the differential jet rate plots should be smooth (meaning that the full jet sample should display no large
    discontinuities)
-   - when qCut is varied the matched cross section should not be changed too much
+   - when qCut is varied the matched cross section should not vary too much
 
