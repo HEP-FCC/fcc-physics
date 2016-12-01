@@ -19,7 +19,7 @@ A review of the available approaches in Pythia8 can be found
 This is not a lecture on merging, but rather a **simple example to get you started**. 
 
 An example on how to perform PS matching using the **MLM approach** is provided in
-```$FCCSW/Generation/data/Pythia_LHEinput_matching.cmd```. This Pythia8 configuration uses a previously generated
+```$FCCSW/Generation/data/Pythia_LHEinput_Matching.cmd```. This Pythia8 configuration uses a previously generated
 LHE files containing hard scattered 100 TeV Z+nJets events (with n =0,1,2).
 
 Within FCCSW, run this example: 
