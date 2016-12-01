@@ -1,5 +1,5 @@
-Pythia8 validation
-===================
+Pythia8 ME/PS validation
+========================
 
 The **Parton Shower** (PS) Monte Carlo programs such as Pythia and Herwig describe parton radiation as successive parton 
 emissions using Markov chain techniques based on Sudakov form factors. This description is formally correct only in the
