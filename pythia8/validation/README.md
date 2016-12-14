@@ -28,7 +28,7 @@ Within FCCSW, run this example:
 
 ```
 
-To produce matching plots, fetch the [creatingMatchingPlots.py](./creatingMatchingPlots.py) script in this repository,
+To produce matching plots, fetch the [creatingMatchingPlots.py](https://github.com/HEP-FCC/fcc-physics/blob/master/pythia8/validation/createMatchingPlots.py) script in this repository,
 and run it: 
 
 ```
