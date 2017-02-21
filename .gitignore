@@ -26,3 +26,7 @@
 *.exe
 *.out
 *.app
+
+# Typical folders for build/install
+build/*
+install/*
