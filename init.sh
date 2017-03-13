@@ -1,31 +1,19 @@
 
 platform='unknown'
-sw_afs=0
 unamestr=`uname`
 
-export LCGPATH=/afs/cern.ch/sw/lcg/views/LCG_83/x86_64-slc6-gcc49-opt
-if [ -z ${FCCPHYSICS+x} ]; then 
+if [ -z ${FCCPHYSICS+x} ]; then
     export FCCPHYSICS=$PWD/install
     echo "FCCPHYSICS is unset, setting to $FCCPHYSICS";
 fi
 
 if [[ "$unamestr" == 'Linux' ]]; then
     platform='Linux'
-    if [[ -d /afs/cern.ch/sw/lcg ]] && [[ `dnsdomainname` = 'cern.ch' ]] ; then
-	#should check domain to make sure we're at CERN
-	#or is this software available somewhere in Lyon? 
-	sw_afs=1
-        source $LCGPATH/setup.sh
-        if [ -z "$PODIO" ]; then
-            export PODIO=/afs/cern.ch/exp/fcc/sw/0.8pre/podio/snapshot/x86_64-slc6-gcc49-opt/
-            export FCCEDM=/afs/cern.ch/exp/fcc/sw/0.8pre/fcc-edm/snapshot/x86_64-slc6-gcc49-opt/
-        fi
-	export PYTHIA8_DIR=/afs/cern.ch/exp/fcc/sw/0.6/LCG_80/MCGenerators/pythia8/212/x86_64-slc6-gcc49-opt
-	export HEPMC_PREFIX=$LCGPATH
-
-	echo software taken from /afs/cern.ch/sw/lcg
+    if [[ -d /cvmfs/fcc.cern.ch/sw ]]; then
+        #should check domain to make sure we're at CERN
+        #or is this software available somewhere in Lyon?
+        source /cvmfs/fcc.cern.ch/sw/0.8/init_fcc_stack.sh
     fi
-    export LD_LIBRARY_PATH=$PYTHIA8_DIR/lib:$FCCPHYSICS/lib:$FCCEDM/lib:$PODIO/lib:$HEPMC_PREFIX/lib:$FASTJET_ROOT_DIR/lib:$LD_LIBRARY_PATH
 elif [[ "$unamestr" == 'Darwin' ]]; then
     platform='Darwin'
     export DYLD_LIBRARY_PATH=$FCCPHYSICS/lib:$HEPMC_PREFIX/lib:$FASTJET_ROOT_DIR/lib:$PYTHIA8_DIR/lib:$DYLD_LIBRARY_PATH
