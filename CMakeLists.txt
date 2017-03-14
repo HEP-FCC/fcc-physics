@@ -27,7 +27,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -DDROP_CGAL ${CPPSTDFLAGS} -Wall -
 
 # Make sure we find the Find*.cmake functions distributed with this package
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-set(CMAKE_PREFIX_PATH $ENV{ROOTSYS} $ENV{PODIO} $ENV{FCCEDM})
+set(CMAKE_PREFIX_PATH $ENV{PODIO} $ENV{FCCEDM})
 
 find_package(podio REQUIRED HINTS $ENV{PODIO})
 message(STATUS "Found podio: ${podio_DIR}")
