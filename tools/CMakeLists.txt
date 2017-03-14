@@ -9,7 +9,8 @@ file(GLOB headers *.h)
 # you want a unique name, not to pick up another .o file,
 # e.g. the one of fcc-edm
 REFLEX_GENERATE_DICTIONARY(fccphysics-toolsDict ${headers} SELECTION selection.xml )
-add_library(fccphysics-tools SHARED ${sources} ${headers} fccphysics-toolsDict.cpp)
+add_library(fccphysics-tools SHARED ${sources} ${headers} fccphysics-toolsDict.cxx)
+add_dependencies(fccphysics-tools fccphysics-toolsDict-dictgen)
 
 target_link_libraries(fccphysics-tools utilities datamodel podio ${ROOT_LIBRARIES} ${ROOT_COMPONENT_LIBRARIES} ${fastjet_LIBRARIES})
 
