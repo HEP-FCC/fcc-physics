@@ -10,7 +10,9 @@ file(GLOB headers *.h)
 # e.g. the one of fcc-edm
 REFLEX_GENERATE_DICTIONARY(fccphysics-MyAnalysisDict ${headers} SELECTION selection.xml )
 
-add_library(fccphysics-myanalysis SHARED ${sources} ${headers} fccphysics-MyAnalysisDict.cxx)
+add_library(fccphysics-myanalysis SHARED ${sources} ${headers}
+fccphysics-MyAnalysisDict.cxx)
+add_dependencies(fccphysics-myanalysis fccphysics-MyAnalysisDict-dictgen)
 
 target_link_libraries(fccphysics-myanalysis utilities datamodel datamodelDict podio ${ROOT_LIBRARIES} ${ROOT_COMPONENT_LIBRARIES})
 
