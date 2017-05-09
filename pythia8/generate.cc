@@ -57,10 +57,10 @@ int main(int argc, char** argv) {
   fcc::GenVertexCollection& vcoll = store.create<fcc::GenVertexCollection>("GenVertex");
   fcc::GenJetCollection& genjetcoll = store.create<fcc::GenJetCollection>("GenJet");
 
-  writer.registerForWrite<fcc::EventInfoCollection>("EventInfo");
-  writer.registerForWrite<fcc::MCParticleCollection>("GenParticle");
-  writer.registerForWrite<fcc::GenVertexCollection>("GenVertex");
-  writer.registerForWrite<fcc::GenJetCollection>("GenJet");
+  writer.registerForWrite("EventInfo");
+  writer.registerForWrite("GenParticle");
+  writer.registerForWrite("GenVertex");
+  writer.registerForWrite("GenJet");
 
   // Generator. Process selection. LHC initialization. Histogram.
   Pythia8::Pythia pythia;
