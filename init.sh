@@ -12,7 +12,7 @@ if [[ "$unamestr" == 'Linux' ]]; then
     if [[ -d /cvmfs/fcc.cern.ch/sw ]]; then
         #should check domain to make sure we're at CERN
         #or is this software available somewhere in Lyon?
-        source /cvmfs/fcc.cern.ch/sw/0.8/init_fcc_stack.sh
+        source /cvmfs/fcc.cern.ch/sw/0.8.1/init_fcc_stack.sh
     fi
 elif [[ "$unamestr" == 'Darwin' ]]; then
     platform='Darwin'
