@@ -12,6 +12,10 @@
 // STL
 #include <iostream>
 #include <vector>
+#include <string>
+#include <sstream>
+#include <iterator>
+
 
 // albers specific includes
 #include "podio/EventStore.h"
@@ -24,14 +28,51 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 
+#include "gflags/gflags.h"
+
 using namespace std;
+
+DEFINE_string(s, "", "Final state selection, e.g. 2x13 for at least two muons");
+
+
+template<typename Out>
+void split(const std::string &s, char delim, Out result) {
+    std::stringstream ss;
+    ss.str(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        *(result++) = item;
+    }
+}
+
+std::vector<std::string> split(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    split(s, delim, std::back_inserter(elems));
+    return elems;
+}
 
 int main(int argc, char** argv) {
 
+  gflags::SetUsageMessage("fcc-pythia8-generate [options] <card_file>");
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
+
   if( argc != 2) {
-    std::cerr << "Usage: pythiafcc-generate <pythia card file>" << std::endl;
-    return 1;
+    //std::cerr << "Usage: pythiafcc-generate <pythia card file>" << std::endl;
+    gflags::ShowUsageWithFlagsRestrict( argv[0], "generate.cc");
+    exit(1);
   }
+
+  // parse the selection string
+  int sel_pdgid = 0;
+  int sel_min_number = 0;
+  if(!FLAGS_s.empty()) {
+    std::cout << "Selection: " << FLAGS_s << std::endl;
+    std::vector<std::string> sel_fields = split(FLAGS_s, 'x');
+    std::cout << sel_fields[0] << " " << sel_fields[1] << std::endl;
+    sel_pdgid = stoi(sel_fields[1]);
+    sel_min_number = stoi(sel_fields[0]);
+  }
+  
   const char* card_file = argv[1];
   std::string output(card_file);
   size_t dot = output.find_last_of(".");
@@ -83,7 +124,10 @@ int main(int argc, char** argv) {
 
   std::vector<fastjet::PseudoJet> input_particles;
 
-  for(unsigned iev=0; iev<nevents; ++iev) {
+  unsigned iev=0;
+  while(true) {
+    if(iev==nevents)
+      break;
     auto evinfo = evinfocoll.create();
     evinfo.number(iev);
 
@@ -104,6 +148,7 @@ int main(int argc, char** argv) {
       vtx_map.emplace(*iv, vtx);
     }
     input_particles.clear();
+    int nsel = 0; 
     for (auto ip = hepmcevt->particles_begin();
          ip != hepmcevt->particles_end(); ++ip) {
       auto hepmcptc = *ip;
@@ -122,6 +167,8 @@ int main(int argc, char** argv) {
                                                       hepmcptc->momentum().py(),
                                                       hepmcptc->momentum().pz(),
                                                       hepmcptc->momentum().e() ));
+	if(sel_pdgid && abs(core.pdgId)==sel_pdgid)
+	  nsel+=1;
       }
       std::vector<fastjet::PseudoJet> input_particles;
 
@@ -134,21 +181,23 @@ int main(int argc, char** argv) {
       if(endvtx != vtx_map.end()) {
         ptc.endVertex(endvtx->second);
       }
-
-    }
-    fastjet::ClusterSequence clust_seq(input_particles, jet_def);
-    double ptmin = 10;
-    std::vector<fastjet::PseudoJet> jets = clust_seq.inclusive_jets(ptmin);
-    for(unsigned i = 0; i < jets.size(); ++i) {
-      auto genjet = genjetcoll.create();
-      auto& core = genjet.core();
-      core.p4.px = jets[i].px();
-      core.p4.py = jets[i].py();
-      core.p4.pz = jets[i].pz();
-      core.p4.mass = jets[i].m();
     }
 
-    writer.writeEvent();
+    if(!sel_pdgid || nsel>=sel_min_number) {
+      fastjet::ClusterSequence clust_seq(input_particles, jet_def);
+      double ptmin = 10;
+      std::vector<fastjet::PseudoJet> jets = clust_seq.inclusive_jets(ptmin);
+      for(unsigned i = 0; i < jets.size(); ++i) {
+	auto genjet = genjetcoll.create();
+	auto& core = genjet.core();
+	core.p4.px = jets[i].px();
+	core.p4.py = jets[i].py();
+	core.p4.pz = jets[i].pz();
+	core.p4.mass = jets[i].m();
+      }
+      writer.writeEvent();
+      iev++;
+    }
     store.clearCollections();
     delete hepmcevt;
   }

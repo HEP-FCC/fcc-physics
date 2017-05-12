@@ -47,6 +47,8 @@ message(STATUS "Found fcc-edm: ${fccedm_DIR}")
 # enable testing infrastructure
 include(CTest)
 
+add_subdirectory(gflags)
+
 find_package(ROOT REQUIRED)
 find_package(HepMC)
 find_package(Pythia8 REQUIRED)

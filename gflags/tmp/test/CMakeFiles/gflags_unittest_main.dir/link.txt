@@ -1,0 +1,1 @@
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -O3 -DNDEBUG -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/gflags_unittest_main.dir/gflags_unittest_main.cc.o  -o ../bin/gflags_unittest_main  ../lib/libgflags.a 
