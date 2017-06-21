@@ -16,17 +16,7 @@ install(FILES
   ${cards}
   DESTINATION share COMPONENT dev)
 
-add_test(NAME generate-ee-ttbar
-        COMMAND fcc-pythia8-generate ${CMAKE_CURRENT_SOURCE_DIR}/ee_ttbar.txt
+add_test(NAME generate-ZH_Z_Hbb
+        COMMAND fcc-pythia8-generate ${CMAKE_CURRENT_SOURCE_DIR}/ee_ZH_Z_Hbb.txt
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-set_property(TEST generate-ee-ttbar PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib:$ENV{LD_LIBRARY_PATH})
-
-add_test(NAME generate-hh-ttbar
-        COMMAND fcc-pythia8-generate ${CMAKE_CURRENT_SOURCE_DIR}/hh_ttbar.txt
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-set_property(TEST generate-hh-ttbar PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib:$ENV{LD_LIBRARY_PATH})
-
-add_test(NAME generate-ZH_Zmumu_Hbb
-        COMMAND fcc-pythia8-generate ${CMAKE_CURRENT_SOURCE_DIR}/ZH_Zmumu_Hbb.txt
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-set_property(TEST generate-ZH_Zmumu_Hbb PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib:$ENV{LD_LIBRARY_PATH})
+set_property(TEST generate-ZH_Z_Hbb PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib:$ENV{LD_LIBRARY_PATH})
