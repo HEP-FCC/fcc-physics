@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/cbernet/Code/FCC/fcc-physics/gflags/test/gflags_declare_flags.cc
+iostream
+-
+gflags/gflags_declare.h
+-
+
+/Users/cbernet/Code/FCC/fcc-physics/gflags/test/gflags_declare_test.cc
+gflags/gflags.h
+-
+
+include/gflags/gflags.h
+string
+-
+vector
+-
+gflags/gflags_declare.h
+include/gflags/gflags/gflags_declare.h
+gflags_gflags.h
+include/gflags/gflags_gflags.h
+
+include/gflags/gflags_declare.h
+string
+-
+stdint.h
+-
+sys/types.h
+-
+inttypes.h
+-
+
+include/gflags/gflags_gflags.h
+
