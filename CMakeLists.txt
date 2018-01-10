@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(pythiafcc CXX)
+project(pythiafcc CXX Fortran)
 
 set(pythia8 $ENV{PYTHIA8_DIR})
 if(NOT pythia8)
@@ -50,7 +50,7 @@ include(CTest)
 add_subdirectory(gflags)
 
 find_package(ROOT REQUIRED)
-find_package(HepMC)
+find_package(HepMC COMPONENTS HepMC fio)
 find_package(Pythia8 REQUIRED)
 find_package(Fastjet)
 
@@ -60,7 +60,7 @@ include_directories(
   "${podio_INCLUDE_DIRS}"
   "${FCCEDM_INCLUDE_DIRS}"
   "${PYTHIA8_INCLUDE_DIRS}"
-  "${HEPMC_INCLUDE}"
+  "${HEPMC_INCLUDE_DIRS}"
   "${fastjet_INCLUDE_DIR}"
   )
 
@@ -71,3 +71,4 @@ add_subdirectory(example)
 add_subdirectory(example-lib)
 add_subdirectory(tools)
 add_subdirectory(pythia8)
+add_subdirectory(hzha)
