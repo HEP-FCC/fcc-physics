@@ -57,7 +57,7 @@ find_package(Fastjet)
 # set up include-directories
 include_directories(
   "${ROOT_INCLUDE_DIRS}"
-  "${podio_INCLUDE_DIRS}"
+  "${podio_INCLUDE_DIR}"
   "${FCCEDM_INCLUDE_DIRS}"
   "${PYTHIA8_INCLUDE_DIRS}"
   "${HEPMC_INCLUDE}"
